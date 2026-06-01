@@ -7105,14 +7105,64 @@ function roomPeerId(code, role){
   return "infoboard-room-" + code + "-" + role;
 }
 
-function initPeer(id, onOpen){
-  if(roomPeer) roomPeer.destroy();
-  const peer = new Peer(id);
-  peer.on("open", pid => { roomPeer = peer; onOpen(pid); });
+function initPeer(id, onOpen) {
+  if (roomPeer) roomPeer.destroy();
+
+  const peer = new Peer(id, {
+    config: {
+      'iceServers': [
+        { url: 'stun:stun.l.google.com:19302' },
+        { url: 'stun:stun1.l.google.com:19302' }
+      ]
+    }
+  });
+
+  peer.on("open", pid => {
+    roomPeer = peer;
+    onOpen(pid);
+  });
+
+  // This listener allows the Host to "pick up the phone" when a Guest joins
+  peer.on("connection", (conn) => {
+    roomConnections.set(conn.peer, conn);
+    setupConnection(conn); 
+    showRoomToast("Someone joined!");
+    updateRoomUserList(); 
+  });
+
   peer.on("error", err => {
     console.error("PeerJS error:", err);
     showRoomToast("Connection error: " + err.type);
   });
+} // This bracket MUST be here to close the function!
+
+  
+function setupConnection(conn) {
+  // Update the count as soon as someone connects
+  updateRoomUserList();
+
+  conn.on("data", (data) => {
+    console.log("Received data:", data);
+    if (data.type === "chat") {
+      roomChatMessages.push(data);
+      renderRoomChat();
+    }
+  });
+
+  conn.on("close", () => {
+    roomConnections.delete(conn.peer);
+    updateRoomUserList();
+    showRoomToast("Member left.");
+  });
+}
+
+function updateRoomUserList() {
+  const countEl = document.getElementById("roomUserCount");
+  if (countEl) {
+    // 1 (You) + the number of connections
+    const total = 1 + roomConnections.size;
+    countEl.textContent = total + " online";
+  }
 }
 
 function createRoom(){
@@ -7186,16 +7236,15 @@ function joinRoom(){
   document.getElementById("roomSub").textContent = "Connecting to room " + code + "...";
   initPeer(myPeerId, pid => {
     const conn = roomPeer.connect(hostPeerId, { reliable: true });
-    conn.on("open", () => {
-      roomConnections.set(hostPeerId, conn);
-      sendToConn(conn, { type: "hello", name: roomMyName, color: roomMyColor, peerId: pid });
-      showRoomActive();
-      document.getElementById("roomCodeDisplay").textContent = code;
-      setRoomStatus("online", "Online");
-      document.getElementById("roomSub").textContent = "Connected to room " + code;
-      showRoomToast("Joined room " + code + "!");
-      renderRoomUsers();
-    });
+// Inside joinRoom...
+conn.on("open", () => {
+    roomConnections.set(conn.peer, conn);
+    setupConnection(conn); // <--- This line is critical!
+    
+    document.getElementById("roomLobby").style.display = "none";
+    document.getElementById("roomActive").style.display = "block";
+    setRoomStatus("online", "Connected");
+});
     conn.on("data", msg => handleRoomMessage(msg, conn));
     conn.on("close", () => {
       roomConnections.delete(hostPeerId);
