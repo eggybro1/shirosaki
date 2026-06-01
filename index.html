@@ -7138,21 +7138,27 @@ function initPeer(id, onOpen) {
 
   
 function setupConnection(conn) {
-  // Update the count as soon as someone connects
-  updateRoomUserList();
-
   conn.on("data", (data) => {
-    console.log("Received data:", data);
+    console.log("Data received:", data); // Check your console (F12) to see this!
+    
     if (data.type === "chat") {
       roomChatMessages.push(data);
       renderRoomChat();
+
+      // If you are the host, send this message to everyone else
+      if (roomIsHost) {
+        roomConnections.forEach((otherConn) => {
+          if (otherConn.peer !== conn.peer && otherConn.open) {
+            otherConn.send(data);
+          }
+        });
+      }
     }
   });
 
   conn.on("close", () => {
     roomConnections.delete(conn.peer);
     updateRoomUserList();
-    showRoomToast("Member left.");
   });
 }
 
@@ -7182,18 +7188,39 @@ function createRoom(){
 }
 
 // ---------- Chat Feature ----------
-function sendRoomChat(){
+function sendRoomChat() {
   const input = document.getElementById("roomChatInput");
+  if (!input) return;
   const text = input.value.trim();
-  if(!text) return;
+  if (!text) return;
 
   const msg = {
     type: "chat",
     text: text,
-    senderName: roomMyName,
-    senderColor: roomMyColor,
+    senderName: roomMyName || "Anonymous",
+    senderColor: roomMyColor || "#ff2a2a",
     sentAt: Date.now()
   };
+
+  // 1. Add to your own screen
+  roomChatMessages.push(msg);
+  renderRoomChat();
+  input.value = "";
+
+  // 2. Loop through connections and send
+  let sendCount = 0;
+  roomConnections.forEach((conn, peerId) => {
+    if (conn && conn.open) {
+      conn.send(msg);
+      sendCount++;
+    } else {
+      console.log("Connection to " + peerId + " is closed. Removing.");
+      roomConnections.delete(peerId);
+    }
+  });
+  
+  updateRoomUserList();
+}
 
   // Add to local list and broadcast
   roomChatMessages.push(msg);
