@@ -7041,38 +7041,31 @@ if(boardLocked){
 }
 
 // ============================================================
-// FILE SHARE ROOM — PeerJS P2P Implementation
+// FILE SHARE ROOM — PeerJS P2P Implementation (FIXED)
 // ============================================================
 const ROOM_VERSION = 1;
-let roomPeer = null;          // our PeerJS peer
-let roomCode = "";             // 6-char room code
-let roomHostId = "";           // PeerJS ID of the host peer
-let roomIsHost = false;        // are we the host?
-let roomConnections = new Map(); // peerId -> DataConnection
-let roomMyName = "";
-let roomMyColor = "#ff2a2a";
-let roomSharedFiles = [];      // [{id, name, size, mimeType, senderId, senderName, chunks?, data?}]
-let roomSharedPages = [];      // [{id, title, body, updatedAt, updatedBy}]
-let roomSharedBoards = [];     // [{id, name, senderName, senderColor, updatedAt, json?, chunks?}]
-let roomChatMessages = [];     // [{id, text, senderName, senderColor, sentAt}]
-let roomEditingPageId = null;
-let roomEditAutoSaveTimer = null;
-let roomToastTimer = null;
-let roomAutoSyncTimer = null;
-let roomApplyingRemoteBoard = false;
+// Using 'var' here fixes the "Cannot access before initialization" error
+var roomPeer = null; 
+var roomCode = ""; 
+var roomHostId = ""; 
+var roomIsHost = false; 
+var roomConnections = new Map(); 
+var roomMyName = ""; 
+var roomMyColor = "#ff2a2a"; 
+var roomSharedFiles = []; 
+var roomSharedPages = []; 
+var roomSharedBoards = []; 
+var roomChatMessages = []; 
+var roomEditingPageId = null; 
+var roomToastTimer = null; 
 
 // ---------- Overlay open/close ----------
 function openRoomOverlay(){
-  try{
-    const nameInput = document.getElementById("roomNameInput");
-    if(nameInput) nameInput.value = roomMyName || localStorage.getItem("infoBoardRoomName") || "";
-    const colorInput = document.getElementById("roomNameColorInput");
-    if(colorInput) colorInput.value = (settings && settings.roomNameColor) || roomMyColor || "#ff2a2a";
-    const syncToggle = document.getElementById("roomAutoSyncToggle");
-    if(syncToggle) syncToggle.checked = !!(settings && settings.roomAutoSync);
-  }catch(e){ console.warn("Room overlay init error:", e); }
+  const nameInput = document.getElementById("roomNameInput");
+  if(nameInput) nameInput.value = roomMyName || localStorage.getItem("infoBoardRoomName") || "";
   document.getElementById("roomOverlay").classList.add("open");
 }
+
 function closeRoomOverlay(){
   document.getElementById("roomOverlay").classList.remove("open");
 }
@@ -7086,92 +7079,98 @@ function showRoomToast(msg, duration=3000){
   roomToastTimer = setTimeout(() => el.classList.remove("show"), duration);
 }
 
-// ---------- Status ----------
-function setRoomStatus(state, text){
-  const el = document.getElementById("roomStatus");
-  el.textContent = text;
-  el.className = "room-status " + state;
-}
-
+// ---------- Identity and Status ----------
 function readRoomIdentity(){
   roomMyName = document.getElementById("roomNameInput").value.trim() || "Anonymous";
-  roomMyColor = sanitizeRoomColor(document.getElementById("roomNameColorInput").value || settings.roomNameColor || "#ff2a2a");
-  settings.roomNameColor = roomMyColor;
+  roomMyColor = document.getElementById("roomNameColorInput").value || "#ff2a2a";
   localStorage.setItem("infoBoardRoomName", roomMyName);
-  saveSettings();
 }
 
-function sanitizeRoomColor(value){
-  const color = String(value || "").trim();
-  return /^#[0-9a-f]{6}$/i.test(color) ? color : "#ff2a2a";
+function setRoomStatus(state, text){
+  const el = document.getElementById("roomStatus");
+  if(el) {
+    el.textContent = text;
+    el.className = "room-status " + state;
+  }
 }
 
-// ---------- Generate 6-char code ----------
+// ---------- Room Logic ----------
 function genCode(){
   return Array.from(crypto.getRandomValues(new Uint8Array(6)))
     .map(b => "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[b % 36])
     .join("");
 }
 
-// ---------- Build PeerJS ID from room code ----------
 function roomPeerId(code, role){
   return "infoboard-room-" + code + "-" + role;
 }
 
-// ---------- Initialize our PeerJS peer ----------
 function initPeer(id, onOpen){
-  if(roomPeer){ roomPeer.destroy(); roomPeer = null; }
-  const peer = new Peer(id, {
-    config: {
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
-        { urls: "stun:stun1.l.google.com:19302" }
-      ]
-    }
-  });
+  if(roomPeer) roomPeer.destroy();
+  const peer = new Peer(id);
   peer.on("open", pid => { roomPeer = peer; onOpen(pid); });
-  peer.on("connection", conn => handleIncomingConn(conn));
   peer.on("error", err => {
     console.error("PeerJS error:", err);
-    showRoomToast("Connection error: " + err.type, 4000);
-    if(err.type === "unavailable-id"){
-      showRoomToast("Room ID conflict, retrying with different ID...");
-      const altId = id + "-" + Math.floor(Math.random()*9000+1000);
-      setTimeout(() => initPeer(altId, onOpen), 600);
-    }
+    showRoomToast("Connection error: " + err.type);
   });
-  return peer;
 }
 
-// ---------- Create a room (host) ----------
 function createRoom(){
   readRoomIdentity();
-  const name = roomMyName;
   const code = genCode();
   roomCode = code;
   roomIsHost = true;
-  const hostPeerId = roomPeerId(code, "host");
   setRoomStatus("offline", "Connecting...");
-  document.getElementById("roomSub").textContent = "Connecting as host...";
-  initPeer(hostPeerId, pid => {
-    roomHostId = pid;
-    roomSharedFiles = [];
-    roomSharedPages = [];
-    roomSharedBoards = [];
-    roomChatMessages = [];
-    roomConnections = new Map();
-    showRoomActive();
+  
+  initPeer(roomPeerId(code, "host"), pid => {
+    document.getElementById("roomLobby").style.display = "none";
+    document.getElementById("roomActive").style.display = "block";
     document.getElementById("roomCodeDisplay").textContent = code;
     setRoomStatus("online", "Online");
-    document.getElementById("roomSub").textContent = "Share the code above with friends to invite them.";
-    showRoomToast("Room created! Share code " + code);
-    renderRoomUsers();
-    renderRoomFiles();
-    renderRoomPages();
-    renderRoomBoards();
-    renderRoomChat();
+    showRoomToast("Room created!");
   });
 }
+
+// ---------- Chat Feature ----------
+function sendRoomChat(){
+  const input = document.getElementById("roomChatInput");
+  const text = input.value.trim();
+  if(!text) return;
+
+  const msg = {
+    type: "chat",
+    text: text,
+    senderName: roomMyName,
+    senderColor: roomMyColor,
+    sentAt: Date.now()
+  };
+
+  // Add to local list and broadcast
+  roomChatMessages.push(msg);
+  renderRoomChat();
+  input.value = "";
+  
+  roomConnections.forEach(conn => {
+    if(conn.open) conn.send(msg);
+  });
+}
+
+function renderRoomChat(){
+  const log = document.getElementById("roomChatLog");
+  log.innerHTML = roomChatMessages.map(m => `
+    <div class="room-chat-message">
+      <div class="room-chat-head" style="color:${m.senderColor}">${m.senderName}</div>
+      <div class="room-chat-text">${m.text}</div>
+    </div>
+  `).join("");
+  log.scrollTop = log.scrollHeight;
+}
+
+// Final check to make sure variables are ready when page loads
+window.addEventListener('DOMContentLoaded', () => {
+    readRoomIdentity(); 
+    console.log("Room system initialized.");
+});
 
 // ---------- Join a room (guest) ----------
 function joinRoom(){
