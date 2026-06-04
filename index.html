@@ -2898,20 +2898,24 @@ let treeDragState = null;
 let desiredPlayback = false;
 let resumePlaybackTimer = 0;
 
-const request = indexedDB.open(DB_NAME, DB_VERSION);
+// Make sure the name is in quotes and the version is a number
+const request = indexedDB.open("InfoBoardDB", 3); 
 
-request.onupgradeneeded = event => {
-  db = event.target.result;
-  if(!db.objectStoreNames.contains("files")){
-    db.createObjectStore("files", { keyPath: "id" });
+request.onupgradeneeded = (e) => {
+  const database = e.target.result;
+  // If "files" store doesn't exist, create it
+  if (!database.objectStoreNames.contains("files")) {
+    database.createObjectStore("files", { keyPath: "id" });
   }
 };
 
-request.onsuccess = event => {
-  db = event.target.result;
+request.onsuccess = (e) => {
+  db = e.target.result;
   dbReady = true;
-  document.getElementById("loading").classList.add("hidden");
-  render();
+  // This hides the loading screen
+  const loadingEl = document.getElementById("loading");
+  if (loadingEl) loadingEl.style.display = "none";
+  console.log("Database connected successfully!");
 };
 
 request.onerror = () => {
