@@ -2898,29 +2898,26 @@ let treeDragState = null;
 let desiredPlayback = false;
 let resumePlaybackTimer = 0;
 
-// Make sure the name is in quotes and the version is a number
-const request = indexedDB.open("InfoBoardDB", 3); 
+// --- COPY AND PASTE THIS OVER THE BROKEN BLOCK ---
+const request = indexedDB.open("InfoBoardDB", 3);
 
-request.onupgradeneeded = (e) => {
+request.onupgradeneeded = function(e) {
   const database = e.target.result;
-  // If "files" store doesn't exist, create it
   if (!database.objectStoreNames.contains("files")) {
     database.createObjectStore("files", { keyPath: "id" });
   }
 };
 
-request.onsuccess = (e) => {
+request.onsuccess = function(e) {
   db = e.target.result;
   dbReady = true;
-  // This hides the loading screen
   const loadingEl = document.getElementById("loading");
   if (loadingEl) loadingEl.style.display = "none";
-  console.log("Database connected successfully!");
+  console.log("Database connected!");
 };
 
-request.onerror = () => {
-  document.getElementById("loading").textContent = "Database unavailable";
-  alert("IndexedDB failed to load. Media features may not work.");
+request.onerror = function(e) {
+  console.error("Database error:", e);
 };
 
 function normalizeFolder(folder){
@@ -7199,26 +7196,31 @@ function createRoom(){
 }
 
 // ---------- Chat Feature ----------
-function sendRoomChat(){
+function sendRoomChat() {
   const input = document.getElementById("roomChatInput");
   const text = input.value.trim();
-  if(!text) return;
+  if (!text) return;
 
   const msg = {
-    type: "chat",
-    text: text,
-    senderName: roomMyName,
-    senderColor: roomMyColor,
-    sentAt: Date.now()
+    type: "chat-message", // Match the type your handler expects
+    message: {
+      id: crypto.randomUUID(),
+      text: text,
+      senderName: roomMyName || "Anonymous",
+      senderColor: roomMyColor || "#ff2a2a",
+      sentAt: new Date().toISOString()
+    }
   };
 
-  // Add to local list and broadcast
-  roomChatMessages.push(msg);
-  renderRoomChat();
+  // 1. Add to your own UI immediately
+  addRoomChatMessage(msg.message, true);
   input.value = "";
-  
-  roomConnections.forEach(conn => {
-    if(conn.open) conn.send(msg);
+
+  // 2. Send to everyone else
+  roomConnections.forEach((conn) => {
+    if (conn.open) {
+      conn.send(msg);
+    }
   });
 }
 
@@ -7342,11 +7344,15 @@ function handleRoomMessage(msg, fromConn){
     case "peer-style":
       renderRoomUsers();
       break;
-    case "chat-message":{
-      addRoomChatMessage(msg.message, false);
-      if(roomIsHost) broadcastExcept(fromConn.peer, msg);
-      break;
-    }
+// --- CHAT MESSAGE FORWARDING ---
+case "chat-message": {
+  addRoomChatMessage(msg.message, false);
+  if (roomIsHost) {
+    // This tells the host to send the guest's message to everyone else
+    broadcastExcept(fromConn.peer, msg); 
+  }
+  break;
+}
     // File sharing: chunked binary transfer
     case "file-announce":{
       const meta = msg.meta;
@@ -7433,11 +7439,21 @@ function handleRoomMessage(msg, fromConn){
 function sendToConn(conn, msg){
   try{ conn.send(msg); } catch(e){ console.warn("Send failed", e); }
 }
-function broadcastAll(msg){
-  roomConnections.forEach(conn => sendToConn(conn, msg));
+// --- BROADCAST FIX ---
+function broadcastExcept(exceptPeerId, msg) {
+  roomConnections.forEach((conn, peerId) => {
+    if (peerId !== exceptPeerId && conn.open) {
+      conn.send(msg);
+    }
+  });
 }
-function broadcastExcept(skipPeerId, msg){
-  roomConnections.forEach((conn, pid) => { if(pid !== skipPeerId) sendToConn(conn, msg); });
+
+function broadcastAll(msg) {
+  roomConnections.forEach((conn) => {
+    if (conn.open) {
+      conn.send(msg);
+    }
+  });
 }
 
 // ---------- File Sharing ----------
