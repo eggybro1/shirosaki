@@ -2898,27 +2898,47 @@ let treeDragState = null;
 let desiredPlayback = false;
 let resumePlaybackTimer = 0;
 
-// --- COPY AND PASTE THIS OVER THE BROKEN BLOCK ---
+function hideLoadingScreen(){
+  const loadingEl = document.getElementById("loading");
+  if(loadingEl) loadingEl.style.display = "none";
+}
+
 const request = indexedDB.open("InfoBoardDB", 3);
 
-request.onupgradeneeded = function(e) {
+request.onupgradeneeded = (e) => {
   const database = e.target.result;
-  if (!database.objectStoreNames.contains("files")) {
+  if(!database.objectStoreNames.contains("files")){
     database.createObjectStore("files", { keyPath: "id" });
   }
 };
 
-request.onsuccess = function(e) {
+request.onsuccess = (e) => {
   db = e.target.result;
   dbReady = true;
-  const loadingEl = document.getElementById("loading");
-  if (loadingEl) loadingEl.style.display = "none";
-  console.log("Database connected!");
+  clearTimeout(dbLoadingTimeout);
+  hideLoadingScreen();
+  console.log("Database connected successfully!");
 };
 
-request.onerror = function(e) {
-  console.error("Database error:", e);
+request.onerror = (e) => {
+  clearTimeout(dbLoadingTimeout);
+  console.warn("IndexedDB error:", e.target.error);
+  hideLoadingScreen();
 };
+
+request.onblocked = () => {
+  clearTimeout(dbLoadingTimeout);
+  console.warn("IndexedDB blocked (another tab may be open).");
+  hideLoadingScreen();
+};
+
+// Safety net: if IndexedDB never responds (private mode, security policy, etc.), unblock the UI after 2s
+const dbLoadingTimeout = setTimeout(() => {
+  if(!dbReady){
+    console.warn("IndexedDB timed out — continuing without media storage.");
+    hideLoadingScreen();
+  }
+}, 2000);
 
 function normalizeFolder(folder){
   return {
@@ -7196,31 +7216,26 @@ function createRoom(){
 }
 
 // ---------- Chat Feature ----------
-function sendRoomChat() {
+function sendRoomChat(){
   const input = document.getElementById("roomChatInput");
   const text = input.value.trim();
-  if (!text) return;
+  if(!text) return;
 
   const msg = {
-    type: "chat-message", // Match the type your handler expects
-    message: {
-      id: crypto.randomUUID(),
-      text: text,
-      senderName: roomMyName || "Anonymous",
-      senderColor: roomMyColor || "#ff2a2a",
-      sentAt: new Date().toISOString()
-    }
+    type: "chat",
+    text: text,
+    senderName: roomMyName,
+    senderColor: roomMyColor,
+    sentAt: Date.now()
   };
 
-  // 1. Add to your own UI immediately
-  addRoomChatMessage(msg.message, true);
+  // Add to local list and broadcast
+  roomChatMessages.push(msg);
+  renderRoomChat();
   input.value = "";
-
-  // 2. Send to everyone else
-  roomConnections.forEach((conn) => {
-    if (conn.open) {
-      conn.send(msg);
-    }
+  
+  roomConnections.forEach(conn => {
+    if(conn.open) conn.send(msg);
   });
 }
 
@@ -7344,15 +7359,11 @@ function handleRoomMessage(msg, fromConn){
     case "peer-style":
       renderRoomUsers();
       break;
-// --- CHAT MESSAGE FORWARDING ---
-case "chat-message": {
-  addRoomChatMessage(msg.message, false);
-  if (roomIsHost) {
-    // This tells the host to send the guest's message to everyone else
-    broadcastExcept(fromConn.peer, msg); 
-  }
-  break;
-}
+    case "chat-message":{
+      addRoomChatMessage(msg.message, false);
+      if(roomIsHost) broadcastExcept(fromConn.peer, msg);
+      break;
+    }
     // File sharing: chunked binary transfer
     case "file-announce":{
       const meta = msg.meta;
@@ -7439,21 +7450,11 @@ case "chat-message": {
 function sendToConn(conn, msg){
   try{ conn.send(msg); } catch(e){ console.warn("Send failed", e); }
 }
-// --- BROADCAST FIX ---
-function broadcastExcept(exceptPeerId, msg) {
-  roomConnections.forEach((conn, peerId) => {
-    if (peerId !== exceptPeerId && conn.open) {
-      conn.send(msg);
-    }
-  });
+function broadcastAll(msg){
+  roomConnections.forEach(conn => sendToConn(conn, msg));
 }
-
-function broadcastAll(msg) {
-  roomConnections.forEach((conn) => {
-    if (conn.open) {
-      conn.send(msg);
-    }
-  });
+function broadcastExcept(skipPeerId, msg){
+  roomConnections.forEach((conn, pid) => { if(pid !== skipPeerId) sendToConn(conn, msg); });
 }
 
 // ---------- File Sharing ----------
