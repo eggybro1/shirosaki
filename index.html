@@ -2899,8 +2899,8 @@ let desiredPlayback = false;
 let resumePlaybackTimer = 0;
 
 function hideLoadingScreen(){
-  const loadingEl = document.getElementById("loading");
-  if(loadingEl) loadingEl.style.display = "none";
+  const el = document.getElementById("loading");
+  if(el) el.style.display = "none";
 }
 
 const request = indexedDB.open("InfoBoardDB", 3);
@@ -2917,27 +2917,20 @@ request.onsuccess = (e) => {
   dbReady = true;
   clearTimeout(dbLoadingTimeout);
   hideLoadingScreen();
-  console.log("Database connected successfully!");
 };
 
-request.onerror = (e) => {
+request.onerror = () => {
   clearTimeout(dbLoadingTimeout);
-  console.warn("IndexedDB error:", e.target.error);
   hideLoadingScreen();
 };
 
 request.onblocked = () => {
   clearTimeout(dbLoadingTimeout);
-  console.warn("IndexedDB blocked (another tab may be open).");
   hideLoadingScreen();
 };
 
-// Safety net: if IndexedDB never responds (private mode, security policy, etc.), unblock the UI after 2s
 const dbLoadingTimeout = setTimeout(() => {
-  if(!dbReady){
-    console.warn("IndexedDB timed out — continuing without media storage.");
-    hideLoadingScreen();
-  }
+  if(!dbReady) hideLoadingScreen();
 }, 2000);
 
 function normalizeFolder(folder){
@@ -7176,12 +7169,6 @@ function setupConnection(conn) {
       }
     }
   });
-
-  conn.on("close", () => {
-    roomConnections.delete(conn.peer);
-    updateRoomUserList();
-  });
-}
 
   conn.on("close", () => {
     roomConnections.delete(conn.peer);
