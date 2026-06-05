@@ -49,7 +49,7 @@ html,body{
 }
 
 body{
-  font-family:"Finger Paint",cursive;
+  font-family:"Finger Paint",sans-serif;
   font-size:var(--font-size);
   color:var(--text);
   background:var(--bg);
@@ -1369,7 +1369,87 @@ body.presentation-mode .markdown-preview{
     flex:1 1 140px;
   }
 }
+
+/* ===== FILE SHARE ROOM STYLES ===== */
+.room-overlay,.room-overlay *{font-family:"Finger Paint",sans-serif}
+.room-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);backdrop-filter:blur(14px);display:none;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto}
+.room-overlay.open{display:flex}
+.room-modal{width:min(1080px,100%);background:var(--panel);border:1px solid var(--border);box-shadow:0 0 0 1px rgba(255,42,42,.18),0 30px 80px rgba(0,0,0,.7);color:var(--text);display:flex;flex-direction:column;max-height:calc(100vh - 64px)}
+.room-modal-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);background:linear-gradient(rgba(255,42,42,.1),transparent);gap:16px;flex-wrap:wrap}
+.room-title{font-family:"Finger Paint",sans-serif;font-size:22px;letter-spacing:.5px;color:var(--accent);text-shadow:0 0 18px rgba(255,42,42,.35);margin:0}
+.room-sub{color:var(--muted);font-size:13px;margin-top:4px}
+.room-modal-body{display:grid;grid-template-columns:1.6fr 1fr;overflow:hidden;min-height:420px}
+.room-left{padding:22px;border-right:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 200px)}
+.room-right{padding:22px;background:var(--panel-soft);overflow-y:auto;max-height:calc(100vh - 200px)}
+.room-entry{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:16px}
+.room-input{width:100%;background:#0b0b0b;border:1px solid var(--border);color:var(--text);padding:12px 14px;font-family:inherit;font-size:14px;letter-spacing:1px;outline:none;transition:border-color var(--motion),box-shadow var(--motion)}
+.room-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(255,42,42,.22)}
+.room-btn{background:linear-gradient(180deg,var(--accent),var(--accent-strong));color:#fff;border:none;padding:12px 18px;font-family:inherit;cursor:pointer;letter-spacing:.5px;transition:transform var(--motion),filter var(--motion)}
+.room-btn:hover{filter:brightness(1.1)}
+.room-btn:active{transform:translateY(1px)}
+.room-btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.room-btn.ghost:hover{background:rgba(255,42,42,.1)}
+.room-btn.danger{background:transparent;color:var(--danger);border:1px solid rgba(255,90,90,.4)}
+.room-section-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:18px 0 10px}
+.room-code-display{font-family:"Finger Paint",sans-serif;font-size:34px;color:var(--accent);letter-spacing:6px;padding:14px 16px;background:#0b0b0b;border:1px dashed var(--accent);text-align:center;cursor:pointer;user-select:all;transition:background var(--motion)}
+.room-code-display:hover{background:rgba(255,42,42,.08)}
+.room-dropzone{border:2px dashed var(--border);padding:28px 16px;text-align:center;color:var(--muted);cursor:pointer;transition:border-color var(--motion),background var(--motion);margin-bottom:14px;display:block}
+.room-dropzone:hover,.room-dropzone.drag{border-color:var(--accent);background:rgba(255,42,42,.06);color:var(--text)}
+.room-dropzone strong{color:var(--accent);display:block;margin-bottom:4px;font-size:15px}
+.room-file-list{display:flex;flex-direction:column;gap:8px}
+.room-file-item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:12px 14px;background:#0b0b0b;border:1px solid var(--border);transition:border-color var(--motion),transform var(--motion)}
+.room-file-item:hover{border-color:var(--accent);transform:translateX(2px)}
+.room-file-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.room-file-name{color:var(--text);font-size:14px;word-break:break-all}
+.room-file-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.room-file-actions button{background:transparent;border:1px solid var(--border);color:var(--text);padding:6px 10px;cursor:pointer;font-family:inherit;font-size:12px;transition:background var(--motion),border-color var(--motion)}
+.room-file-actions button:hover{background:rgba(255,42,42,.1);border-color:var(--accent)}
+.room-file-actions button.del{color:var(--danger);border-color:rgba(255,90,90,.35)}
+.room-user-list{display:flex;flex-direction:column;gap:6px}
+.room-user{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#0b0b0b;border:1px solid var(--border);font-size:13px}
+.room-user .dot{width:8px;height:8px;border-radius:50%;background:#3dffaa;box-shadow:0 0 8px #3dffaa;flex:0 0 auto}
+.room-user.me{border-color:var(--accent)}
+.room-status{display:inline-block;padding:3px 10px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;border:1px solid var(--border);margin-left:10px}
+.room-status.online{color:#3dffaa;border-color:rgba(61,255,170,.4)}
+.room-status.offline{color:var(--muted)}
+.room-empty{text-align:center;padding:24px 12px;color:var(--muted);font-size:13px;border:1px dashed var(--border)}
+.room-close{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 14px;cursor:pointer;font-family:inherit}
+.room-close:hover{background:rgba(255,42,42,.1);border-color:var(--accent)}
+.room-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0b0b0b;color:var(--text);border:1px solid var(--accent);padding:10px 18px;z-index:10001;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+.room-toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+.room-tabs{display:flex;gap:0;margin-bottom:14px;border-bottom:1px solid var(--border)}
+.room-tab{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:10px 18px;font-family:inherit;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:color var(--motion),border-color var(--motion)}
+.room-tab:hover{color:var(--text)}
+.room-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.room-pane{display:none}
+.room-pane.active{display:block}
+.room-page-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.room-page-item{padding:12px 14px;background:#0b0b0b;border:1px solid var(--border);cursor:pointer;transition:border-color var(--motion),transform var(--motion);display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.room-page-item:hover{border-color:var(--accent);transform:translateX(2px)}
+.room-page-title{color:var(--text);font-size:15px;word-break:break-word;margin-bottom:3px}
+.room-page-meta{font-size:11px;color:var(--muted)}
+.room-page-actions{display:flex;gap:6px}
+.room-page-actions button{background:transparent;border:1px solid var(--border);color:var(--text);padding:6px 10px;cursor:pointer;font-family:inherit;font-size:12px}
+.room-page-actions button:hover{background:rgba(255,42,42,.1);border-color:var(--accent)}
+.room-page-actions button.del{color:var(--danger);border-color:rgba(255,90,90,.35)}
+.room-editor{display:none;border:1px solid var(--border);background:#0b0b0b;padding:14px;margin-bottom:14px}
+.room-editor.open{display:block}
+.room-editor-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.room-editor-title-input{width:100%;background:#050505;border:1px solid var(--border);color:var(--text);padding:10px 12px;font-family:inherit;font-size:16px;outline:none;margin-bottom:10px}
+.room-editor-title-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(255,42,42,.22)}
+.room-editor-body-input{width:100%;background:#050505;border:1px solid var(--border);color:var(--text);padding:12px;font-family:inherit;font-size:14px;outline:none;min-height:200px;resize:vertical;line-height:1.55}
+.room-editor-body-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(255,42,42,.22)}
+.room-editor-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:flex-end}
+.room-editing-indicator{font-size:11px;color:var(--accent-2);background:rgba(255,138,61,.1);border:1px solid rgba(255,138,61,.35);padding:3px 8px}
+.room-save-status{font-size:11px;color:var(--muted);letter-spacing:1px}
+.room-save-status.saving{color:var(--accent-2)}
+.room-save-status.saved{color:#3dffaa}
+.room-progress{width:100%;height:3px;background:rgba(255,42,42,.15);margin-top:6px;border-radius:2px;overflow:hidden;display:none}
+.room-progress.active{display:block}
+.room-progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%;transition:width .2s}
+@media(max-width:720px){.room-modal-body{grid-template-columns:1fr}.room-left{border-right:none;border-bottom:1px solid var(--border)}}
 </style>
+<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
 <body>
 <div id="loading">Loading local database...</div>
@@ -1460,6 +1540,7 @@ body.presentation-mode .markdown-preview{
           <button class="ghost-button" onclick="pushLocalSync()">Push Sync</button>
           <button class="ghost-button" onclick="pullLocalSync()">Pull Sync</button>
           <button class="ghost-button" onclick="openSettings()">Settings</button>
+          <button class="primary-button" onclick="openRoomOverlay()">File Share Room</button>
           <button class="ghost-button" onclick="exportData()">Export</button>
           <button class="ghost-button" onclick="exportFolderData()">Export Folder</button>
           <button class="ghost-button" onclick="importFolderData()">Import Folder</button>
@@ -2046,6 +2127,107 @@ body.presentation-mode .markdown-preview{
     </div>
   </div>
 </div>
+
+<!-- FILE SHARE ROOM OVERLAY -->
+<div id="roomOverlay" class="room-overlay">
+  <div class="room-modal" role="dialog" aria-modal="true">
+    <div class="room-modal-head">
+      <div>
+        <h2 class="room-title">File Share Room <span id="roomStatus" class="room-status offline">Disconnected</span></h2>
+        <p class="room-sub" id="roomSub">Create a room or join with a code to share audio files and pages in real-time.</p>
+      </div>
+      <button class="room-close" type="button" onclick="closeRoomOverlay()">Close</button>
+    </div>
+    <div class="room-modal-body">
+      <div class="room-left">
+        <div id="roomLobby">
+          <p class="room-section-label">Your Display Name</p>
+          <div class="room-entry">
+            <input id="roomNameInput" class="room-input" type="text" maxlength="40" placeholder="Enter your name">
+          </div>
+          <p class="room-section-label">Join Existing Room</p>
+          <div class="room-entry">
+            <input id="roomCodeInput" class="room-input" type="text" maxlength="6" placeholder="ABC123" style="text-transform:uppercase">
+            <button class="room-btn" type="button" onclick="joinRoom()">Join</button>
+          </div>
+          <p class="room-section-label">Or Create a New Room</p>
+          <div class="room-entry">
+            <input id="roomTitleInput" class="room-input" type="text" maxlength="60" placeholder="Room name (optional)">
+            <button class="room-btn ghost" type="button" onclick="createRoom()">Create Room</button>
+          </div>
+        </div>
+
+        <div id="roomActive" style="display:none">
+          <p class="room-section-label">Room Code (click to copy)</p>
+          <div id="roomCodeDisplay" class="room-code-display" onclick="copyRoomCode()">------</div>
+          <div class="room-progress" id="roomProgress"><div class="room-progress-bar" id="roomProgressBar"></div></div>
+
+          <div class="room-tabs" style="margin-top:22px">
+            <button class="room-tab active" type="button" data-tab="files" onclick="switchRoomTab('files')">Files</button>
+            <button class="room-tab" type="button" data-tab="pages" onclick="switchRoomTab('pages')">Shared Pages</button>
+          </div>
+
+          <div id="roomPaneFiles" class="room-pane active">
+            <p class="room-section-label">Upload File (audio, html, any)</p>
+            <label class="room-dropzone" id="roomDropzone">
+              <strong>Drop files here or click to browse</strong>
+              <span>Files shared instantly with everyone in the room</span>
+              <input id="roomFileInput" type="file" style="display:none" multiple>
+            </label>
+            <p class="room-section-label">Shared Files <span id="roomFileCount" style="color:var(--accent)">(0)</span></p>
+            <div id="roomFileList" class="room-file-list"><div class="room-empty">No files shared yet.</div></div>
+            <div style="margin-top:14px">
+              <button class="room-btn ghost" type="button" onclick="refreshRoomFiles()">Refresh Files</button>
+            </div>
+          </div>
+
+          <div id="roomPanePages" class="room-pane">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+              <p class="room-section-label" style="margin:0">Pages <span id="roomPageCount" style="color:var(--accent)">(0)</span></p>
+              <div style="display:flex;gap:8px">
+                <button class="room-btn ghost" type="button" onclick="broadcastPages()">Refresh</button>
+                <button class="room-btn" type="button" onclick="newRoomPage()">New Page</button>
+              </div>
+            </div>
+            <div id="roomEditor" class="room-editor">
+              <div class="room-editor-head">
+                <span id="roomEditingIndicator" class="room-editing-indicator" style="display:none"></span>
+                <span id="roomSaveStatus" class="room-save-status">Ready</span>
+              </div>
+              <input id="roomEditorTitle" class="room-editor-title-input" type="text" maxlength="200" placeholder="Page title">
+              <textarea id="roomEditorBody" class="room-editor-body-input" placeholder="Start writing... everyone in the room sees changes live."></textarea>
+              <div class="room-editor-actions">
+                <button class="room-btn ghost" type="button" onclick="closeRoomEditor()">Close</button>
+                <button class="room-btn danger" type="button" onclick="deleteRoomPage()">Delete Page</button>
+                <button class="room-btn" type="button" onclick="saveRoomPage()">Save</button>
+              </div>
+            </div>
+            <div id="roomPageList" class="room-page-list"><div class="room-empty">No shared pages yet. Click "New Page" to start.</div></div>
+          </div>
+
+          <div style="margin-top:22px">
+            <button class="room-btn danger" type="button" onclick="leaveRoom()">Leave Room</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="room-right">
+        <p class="room-section-label">People Online <span id="roomUserCount" style="color:var(--accent)">(0)</span></p>
+        <div id="roomUserList" class="room-user-list"><div class="room-empty">Join a room to see who's online.</div></div>
+        <p class="room-section-label" style="margin-top:24px">How it works</p>
+        <p class="room-sub" style="line-height:1.6">
+          1. Create a room — share the 6-character code with friends.<br>
+          2. They paste the code and join instantly.<br>
+          3. Drop any file — audio, HTML, or anything — and it streams directly to everyone in the room via P2P.<br>
+          4. Shared Pages let your whole group write and read together live.<br>
+          <br>
+          <strong style="color:var(--accent)">All transfers are peer-to-peer.</strong> No server stores your files.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="roomToast" class="room-toast"></div>
 
 <script>
 let db;
@@ -6671,6 +6853,551 @@ save();
 render();
 if(boardLocked){
   setStatus("Board locked. Open Settings and unlock encrypted board.");
+}
+
+// ============================================================
+// FILE SHARE ROOM — PeerJS P2P Implementation
+// ============================================================
+const ROOM_VERSION = 1;
+let roomPeer = null;          // our PeerJS peer
+let roomCode = "";             // 6-char room code
+let roomHostId = "";           // PeerJS ID of the host peer
+let roomIsHost = false;        // are we the host?
+let roomConnections = new Map(); // peerId -> DataConnection
+let roomMyName = "";
+let roomSharedFiles = [];      // [{id, name, size, mimeType, senderId, senderName, chunks?, data?}]
+let roomSharedPages = [];      // [{id, title, body, updatedAt, updatedBy}]
+let roomEditingPageId = null;
+let roomEditAutoSaveTimer = null;
+let roomToastTimer = null;
+
+// ---------- Overlay open/close ----------
+function openRoomOverlay(){
+  document.getElementById("roomOverlay").classList.add("open");
+}
+function closeRoomOverlay(){
+  document.getElementById("roomOverlay").classList.remove("open");
+}
+
+// ---------- Toast ----------
+function showRoomToast(msg, duration=3000){
+  const el = document.getElementById("roomToast");
+  clearTimeout(roomToastTimer);
+  el.textContent = msg;
+  el.classList.add("show");
+  roomToastTimer = setTimeout(() => el.classList.remove("show"), duration);
+}
+
+// ---------- Status ----------
+function setRoomStatus(state, text){
+  const el = document.getElementById("roomStatus");
+  el.textContent = text;
+  el.className = "room-status " + state;
+}
+
+// ---------- Generate 6-char code ----------
+function genCode(){
+  return Array.from(crypto.getRandomValues(new Uint8Array(6)))
+    .map(b => "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[b % 36])
+    .join("");
+}
+
+// ---------- Build PeerJS ID from room code ----------
+function roomPeerId(code, role){
+  return "infoboard-room-" + code + "-" + role;
+}
+
+// ---------- Initialize our PeerJS peer ----------
+function initPeer(id, onOpen){
+  if(roomPeer){ roomPeer.destroy(); roomPeer = null; }
+  const peer = new Peer(id, {
+    config: {
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun1.l.google.com:19302" }
+      ]
+    }
+  });
+  peer.on("open", pid => { roomPeer = peer; onOpen(pid); });
+  peer.on("connection", conn => handleIncomingConn(conn));
+  peer.on("error", err => {
+    console.error("PeerJS error:", err);
+    showRoomToast("Connection error: " + err.type, 4000);
+    if(err.type === "unavailable-id"){
+      showRoomToast("Room ID conflict, retrying with different ID...");
+      const altId = id + "-" + Math.floor(Math.random()*9000+1000);
+      setTimeout(() => initPeer(altId, onOpen), 600);
+    }
+  });
+  return peer;
+}
+
+// ---------- Create a room (host) ----------
+function createRoom(){
+  const name = document.getElementById("roomNameInput").value.trim() || "Anonymous";
+  roomMyName = name;
+  const code = genCode();
+  roomCode = code;
+  roomIsHost = true;
+  const hostPeerId = roomPeerId(code, "host");
+  setRoomStatus("offline", "Connecting...");
+  document.getElementById("roomSub").textContent = "Connecting as host...";
+  initPeer(hostPeerId, pid => {
+    roomHostId = pid;
+    roomSharedFiles = [];
+    roomSharedPages = [];
+    roomConnections = new Map();
+    showRoomActive();
+    document.getElementById("roomCodeDisplay").textContent = code;
+    setRoomStatus("online", "Online");
+    document.getElementById("roomSub").textContent = "Share the code above with friends to invite them.";
+    showRoomToast("Room created! Share code " + code);
+    renderRoomUsers();
+    renderRoomFiles();
+    renderRoomPages();
+  });
+}
+
+// ---------- Join a room (guest) ----------
+function joinRoom(){
+  const name = document.getElementById("roomNameInput").value.trim() || "Anonymous";
+  const code = document.getElementById("roomCodeInput").value.trim().toUpperCase();
+  if(code.length !== 6){ showRoomToast("Enter a 6-character room code"); return; }
+  roomMyName = name;
+  roomCode = code;
+  roomIsHost = false;
+  const hostPeerId = roomPeerId(code, "host");
+  const myPeerId = roomPeerId(code, "guest-" + genCode().slice(0,4));
+  setRoomStatus("offline", "Connecting...");
+  document.getElementById("roomSub").textContent = "Connecting to room " + code + "...";
+  initPeer(myPeerId, pid => {
+    const conn = roomPeer.connect(hostPeerId, { reliable: true });
+    conn.on("open", () => {
+      roomConnections.set(hostPeerId, conn);
+      sendToConn(conn, { type: "hello", name: roomMyName, peerId: pid });
+      showRoomActive();
+      document.getElementById("roomCodeDisplay").textContent = code;
+      setRoomStatus("online", "Online");
+      document.getElementById("roomSub").textContent = "Connected to room " + code;
+      showRoomToast("Joined room " + code + "!");
+      renderRoomUsers();
+    });
+    conn.on("data", msg => handleRoomMessage(msg, conn));
+    conn.on("close", () => {
+      roomConnections.delete(hostPeerId);
+      setRoomStatus("offline", "Disconnected");
+      showRoomToast("Disconnected from host");
+    });
+    conn.on("error", err => showRoomToast("Connection error: " + err));
+  });
+}
+
+// ---------- Show active room panel ----------
+function showRoomActive(){
+  document.getElementById("roomLobby").style.display = "none";
+  document.getElementById("roomActive").style.display = "block";
+}
+
+// ---------- Handle incoming connection (host side) ----------
+function handleIncomingConn(conn){
+  conn.on("open", () => {
+    roomConnections.set(conn.peer, conn);
+    // send state to new peer
+    sendToConn(conn, { type: "welcome", name: roomMyName, peerId: roomPeer.id, files: roomSharedFiles.map(f=>({...f, chunks:undefined, data:undefined})), pages: roomSharedPages });
+    broadcastExcept(conn.peer, { type: "peer-joined", peerId: conn.peer, name: conn._name || "Guest" });
+    renderRoomUsers();
+  });
+  conn.on("data", msg => {
+    if(msg.name) conn._name = msg.name;
+    handleRoomMessage(msg, conn);
+  });
+  conn.on("close", () => {
+    roomConnections.delete(conn.peer);
+    broadcastAll({ type: "peer-left", peerId: conn.peer });
+    renderRoomUsers();
+    showRoomToast("A user left the room");
+  });
+}
+
+// ---------- Handle incoming message ----------
+function handleRoomMessage(msg, fromConn){
+  if(msg.name && fromConn) fromConn._name = msg.name;
+  switch(msg.type){
+    case "hello":
+      fromConn._name = msg.name;
+      renderRoomUsers();
+      showRoomToast(msg.name + " joined the room!");
+      break;
+    case "welcome":
+      // received from host: full state
+      roomSharedFiles = (msg.files || []).map(f => ({...f, chunks:[], data:null}));
+      roomSharedPages = msg.pages || [];
+      renderRoomFiles();
+      renderRoomPages();
+      renderRoomUsers();
+      break;
+    case "peer-joined":
+      renderRoomUsers();
+      if(fromConn._name || msg.name) showRoomToast((msg.name || "Someone") + " joined!");
+      break;
+    case "peer-left":
+      renderRoomUsers();
+      break;
+    // File sharing: chunked binary transfer
+    case "file-announce":{
+      const meta = msg.meta;
+      roomSharedFiles.push({ ...meta, chunks: new Array(meta.totalChunks).fill(null), data: null });
+      renderRoomFiles();
+      showRoomToast((fromConn._name || "Someone") + " is sharing \"" + meta.name + "\"");
+      if(roomIsHost) broadcastExcept(fromConn.peer, msg);
+      break;
+    }
+    case "file-chunk":{
+      const entry = roomSharedFiles.find(f => f.id === msg.fileId);
+      if(entry && entry.chunks){
+        entry.chunks[msg.index] = msg.data;
+        // check if complete
+        if(entry.chunks.every(c => c !== null)){
+          // assemble
+          const blob = new Blob(entry.chunks.map(c => base64ToUint8(c)), { type: entry.mimeType });
+          entry.data = blob;
+          entry.chunks = null;
+          renderRoomFiles();
+        }
+      }
+      if(roomIsHost) broadcastExcept(fromConn.peer, msg);
+      break;
+    }
+    case "page-update":{
+      const idx = roomSharedPages.findIndex(p => p.id === msg.page.id);
+      if(idx >= 0) roomSharedPages[idx] = msg.page;
+      else roomSharedPages.push(msg.page);
+      renderRoomPages();
+      if(roomEditingPageId === msg.page.id){
+        // show editing indicator
+        const ind = document.getElementById("roomEditingIndicator");
+        ind.textContent = (fromConn._name || "Someone") + " is editing";
+        ind.style.display = "inline";
+        setTimeout(() => { ind.style.display = "none"; }, 3000);
+      }
+      if(roomIsHost) broadcastExcept(fromConn.peer, msg);
+      break;
+    }
+    case "page-delete":{
+      roomSharedPages = roomSharedPages.filter(p => p.id !== msg.pageId);
+      if(roomEditingPageId === msg.pageId) closeRoomEditor();
+      renderRoomPages();
+      showRoomToast("A page was deleted");
+      if(roomIsHost) broadcastExcept(fromConn.peer, msg);
+      break;
+    }
+  }
+}
+
+// ---------- Send helpers ----------
+function sendToConn(conn, msg){
+  try{ conn.send(msg); } catch(e){ console.warn("Send failed", e); }
+}
+function broadcastAll(msg){
+  roomConnections.forEach(conn => sendToConn(conn, msg));
+}
+function broadcastExcept(skipPeerId, msg){
+  roomConnections.forEach((conn, pid) => { if(pid !== skipPeerId) sendToConn(conn, msg); });
+}
+
+// ---------- File Sharing ----------
+const CHUNK_SIZE = 64 * 1024; // 64KB chunks
+
+function uint8ToBase64(bytes){
+  let b = "";
+  for(let i = 0; i < bytes.length; i++) b += String.fromCharCode(bytes[i]);
+  return btoa(b);
+}
+function base64ToUint8(b64){
+  const s = atob(b64);
+  const arr = new Uint8Array(s.length);
+  for(let i=0;i<s.length;i++) arr[i]=s.charCodeAt(i);
+  return arr;
+}
+
+async function shareFile(file){
+  if(!roomPeer || roomConnections.size === 0){
+    showRoomToast("No peers connected yet. Share files after others join.");
+    // still add locally
+  }
+  const id = crypto.randomUUID();
+  const buffer = await file.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  const totalChunks = Math.ceil(bytes.length / CHUNK_SIZE);
+  const meta = { id, name: file.name, size: file.size, mimeType: file.type || "application/octet-stream", totalChunks, senderId: roomPeer ? roomPeer.id : "local", senderName: roomMyName };
+  // add locally
+  roomSharedFiles.push({ ...meta, data: new Blob([buffer], { type: meta.mimeType }), chunks: null });
+  renderRoomFiles();
+
+  if(roomConnections.size === 0) return;
+
+  // broadcast announce
+  broadcastAll({ type: "file-announce", meta });
+  // progress
+  const prog = document.getElementById("roomProgress");
+  const bar = document.getElementById("roomProgressBar");
+  prog.classList.add("active");
+
+  for(let i = 0; i < totalChunks; i++){
+    const chunk = bytes.slice(i * CHUNK_SIZE, (i+1) * CHUNK_SIZE);
+    const msg = { type: "file-chunk", fileId: id, index: i, data: uint8ToBase64(chunk) };
+    broadcastAll(msg);
+    bar.style.width = ((i+1)/totalChunks*100) + "%";
+    // yield to event loop
+    await new Promise(r => setTimeout(r, 0));
+  }
+  setTimeout(() => { prog.classList.remove("active"); bar.style.width = "0%"; }, 600);
+  showRoomToast("File \"" + file.name + "\" shared with room");
+}
+
+function refreshRoomFiles(){
+  renderRoomFiles();
+  showRoomToast("Files refreshed");
+}
+
+function renderRoomFiles(){
+  const list = document.getElementById("roomFileList");
+  const count = document.getElementById("roomFileCount");
+  count.textContent = "(" + roomSharedFiles.length + ")";
+  if(roomSharedFiles.length === 0){
+    list.innerHTML = '<div class="room-empty">No files shared yet.</div>';
+    return;
+  }
+  list.innerHTML = "";
+  roomSharedFiles.forEach(f => {
+    const item = document.createElement("div");
+    item.className = "room-file-item";
+    const isComplete = !!f.data;
+    const isAudio = (f.mimeType||"").startsWith("audio/");
+    const info = document.createElement("div");
+    info.innerHTML = '<div class="room-file-name">' + escapeHtml(f.name) + (isComplete ? "" : " <em style=\"color:var(--muted);font-size:11px\">(receiving...)</em>") + '</div><div class="room-file-meta">' + escapeHtml(formatFileSize(f.size || 0)) + " · " + escapeHtml(f.senderName || "Unknown") + '</div>';
+    const actions = document.createElement("div");
+    actions.className = "room-file-actions";
+    if(isComplete){
+      if(isAudio){
+        const play = document.createElement("button");
+        play.textContent = "Play";
+        play.onclick = () => playRoomFile(f);
+        actions.appendChild(play);
+      }
+      const dl = document.createElement("button");
+      dl.textContent = "Download";
+      dl.onclick = () => downloadRoomFile(f);
+      actions.appendChild(dl);
+      if((f.mimeType||"").includes("html")){
+        const open = document.createElement("button");
+        open.textContent = "Open";
+        open.onclick = () => openRoomHtml(f);
+        actions.appendChild(open);
+      }
+    }
+    item.appendChild(info);
+    item.appendChild(actions);
+    list.appendChild(item);
+  });
+}
+
+function downloadRoomFile(f){
+  const url = URL.createObjectURL(f.data);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = f.name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function playRoomFile(f){
+  const url = URL.createObjectURL(f.data);
+  const audio = document.getElementById("audio");
+  audio.src = url;
+  desiredPlayback = true;
+  audio.play().catch(() => {});
+  document.getElementById("playerTrackTitle").textContent = f.name;
+  document.getElementById("playerTrackSubtitle").textContent = "From File Share Room";
+  showRoomToast("Now playing: " + f.name);
+  closeRoomOverlay();
+  startVisualizer();
+}
+
+function openRoomHtml(f){
+  const url = URL.createObjectURL(f.data);
+  window.open(url, "_blank");
+}
+
+// ---------- File input wiring ----------
+(function(){
+  const dropzone = document.getElementById("roomDropzone");
+  const input = document.getElementById("roomFileInput");
+  dropzone.ondragover = e => { e.preventDefault(); dropzone.classList.add("drag"); };
+  dropzone.ondragleave = () => dropzone.classList.remove("drag");
+  dropzone.ondrop = e => {
+    e.preventDefault();
+    dropzone.classList.remove("drag");
+    Array.from(e.dataTransfer.files).forEach(shareFile);
+  };
+  input.onchange = e => {
+    Array.from(e.target.files).forEach(shareFile);
+    e.target.value = "";
+  };
+})();
+
+// ---------- Shared Pages ----------
+function broadcastPages(){
+  broadcastAll({ type: "page-batch", pages: roomSharedPages });
+  renderRoomPages();
+  showRoomToast("Pages refreshed");
+}
+
+function newRoomPage(){
+  const page = { id: crypto.randomUUID(), title: "New Page", body: "", updatedAt: new Date().toISOString(), updatedBy: roomMyName };
+  roomSharedPages.push(page);
+  broadcastAll({ type: "page-update", page });
+  renderRoomPages();
+  openRoomEditor(page.id);
+}
+
+function openRoomEditor(pageId){
+  const page = roomSharedPages.find(p => p.id === pageId);
+  if(!page) return;
+  roomEditingPageId = pageId;
+  document.getElementById("roomEditorTitle").value = page.title || "";
+  document.getElementById("roomEditorBody").value = page.body || "";
+  document.getElementById("roomEditor").classList.add("open");
+  document.getElementById("roomSaveStatus").textContent = "Ready";
+  document.getElementById("roomEditorTitle").focus();
+}
+
+function closeRoomEditor(){
+  roomEditingPageId = null;
+  document.getElementById("roomEditor").classList.remove("open");
+}
+
+function saveRoomPage(){
+  if(!roomEditingPageId) return;
+  const idx = roomSharedPages.findIndex(p => p.id === roomEditingPageId);
+  if(idx < 0) return;
+  const page = {
+    ...roomSharedPages[idx],
+    title: document.getElementById("roomEditorTitle").value.trim() || "Untitled",
+    body: document.getElementById("roomEditorBody").value,
+    updatedAt: new Date().toISOString(),
+    updatedBy: roomMyName
+  };
+  roomSharedPages[idx] = page;
+  broadcastAll({ type: "page-update", page });
+  renderRoomPages();
+  document.getElementById("roomSaveStatus").textContent = "Saved";
+  document.getElementById("roomSaveStatus").className = "room-save-status saved";
+  setTimeout(() => {
+    document.getElementById("roomSaveStatus").textContent = "Ready";
+    document.getElementById("roomSaveStatus").className = "room-save-status";
+  }, 2000);
+}
+
+function deleteRoomPage(){
+  if(!roomEditingPageId) return;
+  if(!confirm("Delete this shared page?")) return;
+  const pageId = roomEditingPageId;
+  roomSharedPages = roomSharedPages.filter(p => p.id !== pageId);
+  broadcastAll({ type: "page-delete", pageId });
+  closeRoomEditor();
+  renderRoomPages();
+}
+
+// Auto-save on title/body input
+document.getElementById("roomEditorTitle").addEventListener("input", () => {
+  document.getElementById("roomSaveStatus").textContent = "Unsaved";
+  document.getElementById("roomSaveStatus").className = "room-save-status saving";
+  clearTimeout(roomEditAutoSaveTimer);
+  roomEditAutoSaveTimer = setTimeout(saveRoomPage, 1500);
+});
+document.getElementById("roomEditorBody").addEventListener("input", () => {
+  document.getElementById("roomSaveStatus").textContent = "Unsaved";
+  document.getElementById("roomSaveStatus").className = "room-save-status saving";
+  clearTimeout(roomEditAutoSaveTimer);
+  roomEditAutoSaveTimer = setTimeout(saveRoomPage, 1500);
+});
+
+function renderRoomPages(){
+  const list = document.getElementById("roomPageList");
+  const count = document.getElementById("roomPageCount");
+  count.textContent = "(" + roomSharedPages.length + ")";
+  if(roomSharedPages.length === 0){
+    list.innerHTML = '<div class="room-empty">No shared pages yet. Click "New Page" to start.</div>';
+    return;
+  }
+  list.innerHTML = "";
+  roomSharedPages.forEach(p => {
+    const item = document.createElement("div");
+    item.className = "room-page-item";
+    const info = document.createElement("div");
+    info.innerHTML = '<div class="room-page-title">' + escapeHtml(p.title || "Untitled") + '</div><div class="room-page-meta">Updated by ' + escapeHtml(p.updatedBy || "?") + ' · ' + new Date(p.updatedAt).toLocaleTimeString() + '</div>';
+    const actions = document.createElement("div");
+    actions.className = "room-page-actions";
+    const edit = document.createElement("button");
+    edit.textContent = "Edit";
+    edit.onclick = e => { e.stopPropagation(); openRoomEditor(p.id); };
+    actions.appendChild(edit);
+    item.appendChild(info);
+    item.appendChild(actions);
+    item.onclick = () => openRoomEditor(p.id);
+    list.appendChild(item);
+  });
+}
+
+// ---------- User List ----------
+function renderRoomUsers(){
+  const list = document.getElementById("roomUserList");
+  const count = document.getElementById("roomUserCount");
+  const users = [];
+  // add self
+  users.push({ name: roomMyName || "Me", peerId: roomPeer ? roomPeer.id : "local", isMe: true });
+  // add peers
+  roomConnections.forEach((conn, pid) => {
+    users.push({ name: conn._name || "Unknown", peerId: pid, isMe: false });
+  });
+  count.textContent = "(" + users.length + ")";
+  list.innerHTML = "";
+  users.forEach(u => {
+    const el = document.createElement("div");
+    el.className = "room-user" + (u.isMe ? " me" : "");
+    el.innerHTML = '<span class="dot"></span><span>' + escapeHtml(u.name) + (u.isMe ? " (you)" : "") + '</span>';
+    list.appendChild(el);
+  });
+}
+
+// ---------- Copy room code ----------
+function copyRoomCode(){
+  if(!roomCode) return;
+  navigator.clipboard.writeText(roomCode).then(() => showRoomToast("Room code " + roomCode + " copied!"));
+}
+
+// ---------- Tab switching ----------
+function switchRoomTab(tab){
+  document.querySelectorAll(".room-tab").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tab));
+  document.getElementById("roomPaneFiles").classList.toggle("active", tab === "files");
+  document.getElementById("roomPanePages").classList.toggle("active", tab === "pages");
+}
+
+// ---------- Leave room ----------
+function leaveRoom(){
+  if(roomPeer){ roomPeer.destroy(); roomPeer = null; }
+  roomConnections = new Map();
+  roomSharedFiles = [];
+  roomSharedPages = [];
+  roomCode = "";
+  roomIsHost = false;
+  roomEditingPageId = null;
+  document.getElementById("roomLobby").style.display = "block";
+  document.getElementById("roomActive").style.display = "none";
+  setRoomStatus("offline", "Disconnected");
+  document.getElementById("roomSub").textContent = "Create a room or join with a code to share files in real-time.";
+  showRoomToast("Left the room");
 }
 </script>
 </body>
