@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Info Board</title>
+<title>Shirosaki</title>
 <link id="appFavicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23090909'/%3E%3Crect x='10' y='10' width='44' height='44' fill='%23ff2a2a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1562,14 +1562,14 @@ body.presentation-mode .markdown-preview{
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
 <body>
-<div id="loading">Loading local database...</div>
+<div id="loading">Loading yo stuff</div>
 
 <div class="shell">
   <div class="app" id="appRoot">
     <aside class="sidebar panel">
       <div class="brand">
         <div>
-          <h1>Info Board</h1>
+          <h1>Shirosaki</h1>
           <p>Your local notes, media, and playlists in one tidy workspace.</p>
         </div>
         <span class="pill" id="pageCountBadge">0 pages</span>
@@ -1952,6 +1952,7 @@ body.presentation-mode .markdown-preview{
         <option value="terminal">Terminal Acid</option>
         <option value="bluevoid">Blue Void</option>
         <option value="ember">Ember Furnace</option>
+        <option value="starkk">Starkk</option>
         <option value="custom">Custom Maker</option>
       </select>
     </div>
@@ -2195,6 +2196,7 @@ body.presentation-mode .markdown-preview{
         <option value="terminal">Terminal Acid</option>
         <option value="bluevoid">Blue Void</option>
         <option value="ember">Ember Furnace</option>
+        <option value="starkk">Starkk</option>
         <option value="custom">Custom Maker</option>
       </select>
     </div>
@@ -2354,6 +2356,12 @@ body.presentation-mode .markdown-preview{
             <div class="room-chat-entry">
               <input id="roomChatInput" class="room-input" type="text" maxlength="500" placeholder="Type a message">
               <button class="room-btn" type="button" onclick="sendRoomChat()">Send</button>
+            </div>
+            <div style="margin-top:8px">
+              <label class="room-btn ghost" style="cursor:pointer;width:100%;text-align:center;display:block">
+                Send Image Reaction
+                <input id="roomReactionInput" type="file" accept="image/*" style="display:none" onchange="sendImageReaction(this)">
+              </label>
             </div>
           </div>
 
@@ -2860,6 +2868,22 @@ const themePresets = {
     accent: "#f97316",
     accent2: "#c59b83",
     gridRgb: "249 115 22"
+  },
+  starkk: {
+    mode: "dark",
+    bg: "#000308",
+    bgElevated: "rgba(0,4,14,.97)",
+    panel: "#00060f",
+    panelSoft: "#000d1f",
+    text: "#ddeeff",
+    muted: "#4a7aaa",
+    border: "rgba(0,100,220,.28)",
+    shadow: "0 0 0 1px rgba(0,80,200,.18), 0 22px 60px rgba(0,0,0,.72)",
+    accent: "#0064dc",
+    accent2: "#0099ff",
+    gridRgb: "0 100 220",
+    gridRgb2: "0 153 255",
+    gridRgb3: "0 30 80"
   }
 };
 
@@ -7053,7 +7077,7 @@ var roomToastTimer      = null;
 var roomEditAutoSave    = null;
 var roomAutoSyncTimer   = null;
 var roomApplyingRemote  = false;
-const ROOM_CHUNK = 48 * 1024;
+const ROOM_CHUNK = 8 * 1024;  // 8KB — safe for WebRTC data channels
 
 // ── overlay ──────────────────────────────────────────────────
 function openRoomOverlay(){
@@ -7258,7 +7282,33 @@ function onMsg(msg, fromConn, fromId){
 
     case "file-chunk":{
       var fe = roomSharedFiles.find(function(f){ return f.id===msg.fileId; });
-      if(fe && fe.chunks){ fe.chunks[msg.index]=msg.data; if(fe.chunks.every(function(c){return c!==null;})){ fe.data=new Blob(fe.chunks.map(b64ToUint8),{type:fe.mimeType}); fe.chunks=null; renderRoomFiles(); } }
+      if(fe && fe.chunks){
+        fe.chunks[msg.index]=msg.data;
+        // Check if all chunks received
+        var received = fe.chunks.filter(function(c){return c!==null;}).length;
+        if(received === fe.totalChunks){
+          fe.data=new Blob(fe.chunks.map(b64ToUint8),{type:fe.mimeType});
+          fe.chunks=null;
+          renderRoomFiles();
+          showRoomToast(fe.name + " received!");
+        }
+      }
+      if(roomIsHost) relay(fromId, msg);
+      break;
+    }
+
+    case "file-complete":{
+      // Force-assemble any file that has all chunks but wasn't triggered yet
+      var fc = roomSharedFiles.find(function(f){ return f.id===msg.fileId; });
+      if(fc && fc.chunks && !fc.data){
+        var filled = fc.chunks.filter(function(c){return c!==null;});
+        if(filled.length > 0){
+          fc.data=new Blob(filled.map(b64ToUint8),{type:fc.mimeType});
+          fc.chunks=null;
+          renderRoomFiles();
+          showRoomToast(fc.name + " received!");
+        }
+      }
       if(roomIsHost) relay(fromId, msg);
       break;
     }
@@ -7289,7 +7339,27 @@ function onMsg(msg, fromConn, fromId){
 
     case "board-chunk":{
       var be = roomSharedBoards.find(function(b){ return b.id===msg.boardId; });
-      if(be && be.chunks){ be.chunks[msg.index]=msg.data; if(be.chunks.every(function(c){return c!==null;})){ be.json=be.chunks.join(""); be.chunks=null; renderRoomBoards(); showRoomToast("Board package received!"); } }
+      if(be && be.chunks){
+        be.chunks[msg.index]=msg.data;
+        var gotAll = be.chunks.filter(function(c){return c!==null;}).length;
+        if(gotAll === be.totalChunks){
+          be.json=be.chunks.join(""); be.chunks=null;
+          renderRoomBoards(); showRoomToast("Board received!");
+        }
+      }
+      if(roomIsHost) relay(fromId, msg);
+      break;
+    }
+
+    case "board-complete":{
+      var bc = roomSharedBoards.find(function(b){ return b.id===msg.boardId; });
+      if(bc && bc.chunks && !bc.json){
+        var filled = bc.chunks.filter(function(c){return c!==null;});
+        if(filled.length > 0){
+          bc.json=filled.join(""); bc.chunks=null;
+          renderRoomBoards(); showRoomToast("Board received!");
+        }
+      }
       if(roomIsHost) relay(fromId, msg);
       break;
     }
@@ -7322,7 +7392,10 @@ async function shareFile(file){
   var totalChunks = Math.max(1, Math.ceil(bytes.length / ROOM_CHUNK));
   var meta = { id:id, name:file.name, size:file.size, mimeType:file.type||"application/octet-stream", totalChunks:totalChunks, senderName:roomMyName };
 
-  roomSharedFiles.push(Object.assign({},meta,{ data:new Blob([buf],{type:meta.mimeType}), chunks:null }));
+  // Sender gets it immediately as complete
+  roomSharedFiles.push({ id:id, name:file.name, size:file.size, mimeType:meta.mimeType,
+    totalChunks:totalChunks, senderName:roomMyName,
+    data:new Blob([buf],{type:meta.mimeType}), chunks:null });
   renderRoomFiles();
 
   if(roomConnections.size===0){ showRoomToast("Saved locally — no peers yet."); return; }
@@ -7335,12 +7408,15 @@ async function shareFile(file){
 
   for(var i=0; i<totalChunks; i++){
     var slice = bytes.slice(i*ROOM_CHUNK, (i+1)*ROOM_CHUNK);
-    broadcast({ type:"file-chunk", fileId:id, index:i, data:uint8ToB64(slice) });
+    broadcast({ type:"file-chunk", fileId:id, index:i, data:uint8ToB64(slice), total:totalChunks });
     if(bar) bar.style.width = ((i+1)/totalChunks*100)+"%";
-    await new Promise(function(r){ setTimeout(r,0); });
+    // 5ms pacing prevents WebRTC data channel buffer overflow
+    await new Promise(function(r){ setTimeout(r,5); });
   }
+  // Explicit done signal — receiver assembles on this even if a count check missed
+  broadcast({ type:"file-complete", fileId:id });
   setTimeout(function(){ if(prog) prog.classList.remove("active"); if(bar) bar.style.width="0%"; }, 600);
-  showRoomToast(file.name + " shared!");
+  showRoomToast(file.name + " sent!");
 }
 
 // dropzone wiring
@@ -7473,10 +7549,13 @@ async function shareCurrentBoardToRoom(){
     renderRoomBoards();
     broadcast({type:"board-announce",meta:meta});
     for(var i=0;i<total;i++){
-      broadcast({type:"board-chunk",boardId:id,index:i,data:json.slice(i*ROOM_CHUNK,(i+1)*ROOM_CHUNK)});
-      await new Promise(function(r){setTimeout(r,0);});
+      broadcast({type:"board-chunk",boardId:id,index:i,data:json.slice(i*ROOM_CHUNK,(i+1)*ROOM_CHUNK),total:total});
+      // pace chunks to prevent buffer overflow
+      await new Promise(function(r){setTimeout(r,5);});
     }
-    showRoomToast("Board shared with room!");
+    // Signal completion
+    broadcast({type:"board-complete",boardId:id});
+    showRoomToast("Board sent!");
   }catch(e){ showRoomToast("Share board failed: "+e.message); }
 }
 
@@ -7499,6 +7578,20 @@ function sendRoomChat(){
   renderRoomChat();
 }
 
+function sendImageReaction(input){
+  var file = input.files && input.files[0]; if(!file) return;
+  input.value="";
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var dataUrl = e.target.result;
+    var msg = {id:crypto.randomUUID(), type:"chat-message", senderName:roomMyName, senderColor:roomMyColor, message:"", imageReaction:dataUrl, sentAt:new Date().toISOString()};
+    roomChatMessages.push(msg);
+    broadcast(msg);
+    renderRoomChat();
+  };
+  reader.readAsDataURL(file);
+}
+
 try{document.getElementById("roomChatInput").addEventListener("keydown",function(e){ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendRoomChat();} });}catch(_){}
 
 function renderRoomChat(){
@@ -7510,7 +7603,13 @@ function renderRoomChat(){
   roomChatMessages.forEach(function(m){
     var el=document.createElement("div"); el.className="room-chat-message";
     var color=safeColor(m.senderColor||"#aaa");
-    el.innerHTML='<div class="room-chat-head" style="color:'+color+'">'+escapeHtml(m.senderName||"?")+'</div><div class="room-chat-text">'+escapeHtml(m.message||"")+'</div>';
+    var body = "";
+    if(m.imageReaction){
+      body = '<img src="'+m.imageReaction+'" style="max-width:180px;max-height:180px;display:block;margin-top:6px;border:1px solid var(--border)" alt="reaction">';
+    } else {
+      body = '<div class="room-chat-text">'+escapeHtml(m.message||"")+'</div>';
+    }
+    el.innerHTML='<div class="room-chat-head" style="color:'+color+'">'+escapeHtml(m.senderName||"?")+'</div>'+body;
     log.appendChild(el);
   });
   log.scrollTop=log.scrollHeight;
