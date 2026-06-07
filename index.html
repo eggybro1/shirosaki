@@ -380,6 +380,150 @@ body.theme-ninecircles{
   }
 }
 
+body.theme-flandre{
+  --accent:var(--accent-pulse-a);
+  --accent-2:var(--accent-pulse-b);
+  --accent-strong:var(--accent-pulse-b);
+  animation:flandre-rainbow 7s linear infinite;
+}
+
+@keyframes flandre-rainbow{
+  0%{
+    --accent:#ffd700;
+    --accent-2:#ff5252;
+    --accent-pulse-a:#ffd700;
+    --accent-pulse-b:#ff5252;
+    --accent-strong:#e6b800;
+    --bg-grid-rgb:255 215 0;
+    --bg-grid-rgb-2:255 82 82;
+    --bg-grid-rgb-3:255 193 7;
+  }
+  12.5%{
+    --accent:#ff9800;
+    --accent-2:#ffd700;
+    --accent-pulse-a:#ff9800;
+    --accent-pulse-b:#ffd700;
+    --accent-strong:#ff9800;
+    --bg-grid-rgb:255 152 0;
+    --bg-grid-rgb-2:255 215 0;
+    --bg-grid-rgb-3:255 87 34;
+  }
+  25%{
+    --accent:#ff5252;
+    --accent-2:#ffd700;
+    --accent-pulse-a:#ff5252;
+    --accent-pulse-b:#ffd700;
+    --accent-strong:#ff5252;
+    --bg-grid-rgb:255 82 82;
+    --bg-grid-rgb-2:255 215 0;
+    --bg-grid-rgb-3:255 64 129;
+  }
+  37.5%{
+    --accent:#e91e63;
+    --accent-2:#ffd700;
+    --accent-pulse-a:#e91e63;
+    --accent-pulse-b:#ffd700;
+    --accent-strong:#e91e63;
+    --bg-grid-rgb:233 30 99;
+    --bg-grid-rgb-2:255 215 0;
+    --bg-grid-rgb-3:255 105 180;
+  }
+  50%{
+    --accent:#ab47bc;
+    --accent-2:#ffd700;
+    --accent-pulse-a:#ab47bc;
+    --accent-pulse-b:#ffd700;
+    --accent-strong:#ab47bc;
+    --bg-grid-rgb:171 71 188;
+    --bg-grid-rgb-2:255 215 0;
+    --bg-grid-rgb-3:79 195 247;
+  }
+  62.5%{
+    --accent:#29b6f6;
+    --accent-2:#ffd700;
+    --accent-pulse-a:#29b6f6;
+    --accent-pulse-b:#ffd700;
+    --accent-strong:#29b6f6;
+    --bg-grid-rgb:41 182 246;
+    --bg-grid-rgb-2:255 215 0;
+    --bg-grid-rgb-3:0 188 212;
+  }
+  75%{
+    --accent:#76ff03;
+    --accent-2:#ffd700;
+    --accent-pulse-a:#76ff03;
+    --accent-pulse-b:#ffd700;
+    --accent-strong:#76ff03;
+    --bg-grid-rgb:118 255 3;
+    --bg-grid-rgb-2:255 215 0;
+    --bg-grid-rgb-3:139 195 74;
+  }
+  87.5%{
+    --accent:#ffeb3b;
+    --accent-2:#ff5252;
+    --accent-pulse-a:#ffeb3b;
+    --accent-pulse-b:#ff5252;
+    --accent-strong:#ffeb3b;
+    --bg-grid-rgb:255 235 59;
+    --bg-grid-rgb-2:255 82 82;
+    --bg-grid-rgb-3:255 193 7;
+  }
+  100%{
+    --accent:#ffd700;
+    --accent-2:#ff5252;
+    --accent-pulse-a:#ffd700;
+    --accent-pulse-b:#ff5252;
+    --accent-strong:#e6b800;
+    --bg-grid-rgb:255 215 0;
+    --bg-grid-rgb-2:255 82 82;
+    --bg-grid-rgb-3:255 193 7;
+  }
+}
+
+.backup-section{
+  display:grid;
+  gap:12px;
+  padding:16px;
+  border:1px solid var(--border);
+  background:var(--panel-soft);
+}
+
+.backup-section h4{
+  margin:0;
+  font-size:.95rem;
+}
+
+.backup-section p{
+  margin:0;
+  color:var(--muted);
+  font-size:.88rem;
+  line-height:1.45;
+}
+
+.backup-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:10px;
+}
+
+.backup-options{
+  display:grid;
+  gap:10px;
+}
+
+.backup-option-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.backup-status{
+  min-height:1.4em;
+  color:var(--muted);
+  font-size:.88rem;
+}
+
 .folder-head,
 .page-row{
   width:100%;
@@ -936,12 +1080,13 @@ body.presentation-mode .markdown-preview{
   justify-content:flex-start;
 }
 
-.track button{
+.track .track-play{
   background:transparent;
   color:var(--text);
-  width:100%;
+  flex:1 1 auto;
   text-align:left;
   padding:0;
+  min-width:0;
 }
 
 .audio-player{
@@ -1651,13 +1796,7 @@ body.presentation-mode .markdown-preview{
           <button class="ghost-button" onclick="pullLocalSync()">Pull Sync</button>
           <button class="ghost-button" onclick="openSettings()">Settings</button>
           <button class="primary-button" onclick="openRoomOverlay()">File Share Room</button>
-          <button class="ghost-button" onclick="exportData()">Export</button>
-          <button class="ghost-button" onclick="exportFolderData()">Export Folder</button>
-          <button class="ghost-button" onclick="importFolderData()">Import Folder</button>
-          <label class="file-button">
-            Import
-            <input id="importInput" class="hidden" type="file" accept="application/json">
-          </label>
+          <button class="ghost-button" onclick="openBackupModal()">Backup &amp; Restore</button>
         </div>
       </section>
 
@@ -1857,7 +1996,7 @@ body.presentation-mode .markdown-preview{
                 </div>
                 <div id="youtubeFrame" class="youtube-frame"><div class="empty-note">No YouTube video loaded.</div></div>
               </div>
-              <audio id="audio" class="audio-player" controls></audio>
+              <audio id="audio" class="audio-player" preload="auto" playsinline></audio>
             </div>
           </section>
 
@@ -1944,7 +2083,6 @@ body.presentation-mode .markdown-preview{
         <option value="reiayanami">Rei Ayanami</option>
         <option value="ninecircles">Nine Circles</option>
         <option value="goku">Goku</option>
-        <option value="hongmeiling">Hong meiling</option>
         <option value="aizen">Aizen</option>
         <option value="zangetsu">Zangetsu</option>
         <option value="giorno">Giorno</option>
@@ -1954,7 +2092,18 @@ body.presentation-mode .markdown-preview{
         <option value="bluevoid">Blue Void</option>
         <option value="ember">Ember Furnace</option>
         <option value="starkk">Starkk</option>
-        <option value="custom">Custom Maker</option>
+        <option value="mugetsu">Mugetsu</option>
+        <option value="fullbringIchigo">Fullbring Ichigo</option>
+        <option value="quincyIchigo">Quincy Ichigo</option>
+        <option value="artworksIchigo">Artworks Ichigo</option>
+        <option value="timeskipIchigo">Timeskip Ichigo</option>
+        <option value="meiling">Meiling</option>
+        <option value="marisa">Marisa</option>
+        <option value="sakuya">Sakuya</option>
+        <option value="remilia">Remilia</option>
+        <option value="flandre">Flandre</option>
+        <option value="trish">Trish</option>
+        <option value="custom">Custom Maker (unsaved)</option>
       </select>
     </div>
 
@@ -2077,12 +2226,18 @@ body.presentation-mode .markdown-preview{
       <label for="themeNameInput">Theme Name</label>
       <input id="themeNameInput" placeholder="Name this custom theme">
       <div class="theme-actions">
-        <button class="primary-button" type="button" onclick="saveCurrentCustomTheme()">Save Theme</button>
+        <button class="primary-button" type="button" onclick="saveCurrentCustomTheme()">Save to Menu</button>
         <button class="ghost-button" type="button" onclick="exportThemePack()">Export Theme Pack</button>
+        <button class="ghost-button" type="button" onclick="exportSelectedThemePack()">Export Selected Only</button>
         <label class="file-button">
           Import Theme Pack
           <input id="themePackInput" class="hidden" type="file" accept="application/json">
         </label>
+      </div>
+      <p class="empty-note">Saved themes appear in the main Theme menu under “Your Custom Themes”.</p>
+      <div class="theme-actions">
+        <label for="themePackNameInput">Pack Name (for export)</label>
+        <input id="themePackNameInput" placeholder="My Theme Pack">
       </div>
     </div>
 
@@ -2189,7 +2344,6 @@ body.presentation-mode .markdown-preview{
         <option value="reiayanami">Rei Ayanami</option>
         <option value="ninecircles">Nine Circles</option>
         <option value="goku">Goku</option>
-        <option value="hongmeiling">Hong Meiling</option>
         <option value="aizen">Aizen</option>
         <option value="zangetsu">Zangetsu</option>
         <option value="giorno">Giorno</option>
@@ -2199,7 +2353,18 @@ body.presentation-mode .markdown-preview{
         <option value="bluevoid">Blue Void</option>
         <option value="ember">Ember Furnace</option>
         <option value="starkk">Starkk</option>
-        <option value="custom">Custom Maker</option>
+        <option value="mugetsu">Mugetsu</option>
+        <option value="fullbringIchigo">Fullbring Ichigo</option>
+        <option value="quincyIchigo">Quincy Ichigo</option>
+        <option value="artworksIchigo">Artworks Ichigo</option>
+        <option value="timeskipIchigo">Timeskip Ichigo</option>
+        <option value="meiling">Meiling</option>
+        <option value="marisa">Marisa</option>
+        <option value="sakuya">Sakuya</option>
+        <option value="remilia">Remilia</option>
+        <option value="flandre">Flandre</option>
+        <option value="trish">Trish</option>
+        <option value="custom">Custom Maker (unsaved)</option>
       </select>
     </div>
 
@@ -2257,6 +2422,62 @@ body.presentation-mode .markdown-preview{
     </div>
     <div class="board-map-wrap">
       <div id="boardMapCanvas" class="board-map-canvas"></div>
+    </div>
+  </div>
+</div>
+
+<div id="backupModal" class="modal hidden">
+  <div class="modal-card" style="width:min(720px,calc(100vw - 40px))">
+    <div class="modal-head">
+      <div>
+        <h3>Backup &amp; Restore</h3>
+        <p class="empty-note">Export your board, media, and themes — or import them back with replace or merge.</p>
+      </div>
+      <button class="ghost-button" type="button" onclick="closeBackupModal()">Close</button>
+    </div>
+
+    <div id="backupStatus" class="backup-status">Ready</div>
+
+    <div class="backup-section">
+      <h4>Export</h4>
+      <p>Save your notes, folders, settings, and optionally all attached media files.</p>
+      <div class="backup-options">
+        <label class="backup-option-row">
+          <input id="backupIncludeMedia" type="checkbox" checked>
+          <span>Include media files (audio, images, attachments)</span>
+        </label>
+      </div>
+      <div class="backup-grid">
+        <button class="primary-button" type="button" onclick="exportData()">Export JSON Backup</button>
+        <button class="ghost-button" type="button" onclick="exportFolderData()">Export as Folder</button>
+        <button class="ghost-button" type="button" onclick="exportThemePack()">Export Theme Pack</button>
+      </div>
+    </div>
+
+    <div class="backup-section">
+      <h4>Import</h4>
+      <p>Bring back a saved backup. Replace wipes the current board; merge adds and updates without deleting existing content.</p>
+      <div class="backup-options">
+        <label class="backup-option-row">
+          <input type="radio" name="backupImportMode" value="replace" checked>
+          <span>Replace current board</span>
+        </label>
+        <label class="backup-option-row">
+          <input type="radio" name="backupImportMode" value="merge">
+          <span>Merge into current board</span>
+        </label>
+      </div>
+      <div class="backup-grid">
+        <label class="file-button">
+          Import JSON Backup
+          <input id="importInput" class="hidden" type="file" accept="application/json,.json">
+        </label>
+        <button class="ghost-button" type="button" onclick="importFolderData()">Import from Folder</button>
+        <label class="file-button">
+          Import Theme Pack
+          <input id="backupThemePackInput" class="hidden" type="file" accept="application/json,.json">
+        </label>
+      </div>
     </div>
   </div>
 </div>
@@ -2733,23 +2954,7 @@ const themePresets = {
     gridRgb2: "214 38 18",
     gridRgb3: "16 16 16"
   },
-hongmeiling: {
-    mode: "dark",
-    bg: "#05120a", 
-    bgElevated: "rgba(8,20,13,.97)",
-    panel: "#0b2013",
-    panelSoft: "#143320",
-    text: "#f4f7f5", 
-    muted: "#e5c158", 
-    border: "rgba(46,204,113,.26)", 
-    shadow: "0 0 0 1px rgba(231,76,60,.14), 0 22px 60px rgba(0,0,0,.60)", 
-    accent: "#2ecc71", 
-    accent2: "#e74c3c", 
-    gridRgb: "46 204 113",
-    gridRgb2: "231 76 60", 
-    gridRgb3: "10 24 16" 
-  },
-    goku: {
+  goku: {
     mode: "dark",
     bg: "#070b12",
     bgElevated: "rgba(10,15,24,.97)",
@@ -2902,6 +3107,188 @@ hongmeiling: {
     gridRgb: "0 100 220",
     gridRgb2: "0 153 255",
     gridRgb3: "0 30 80"
+  },
+
+  // ── BLEACH: BRAVE SOULS ──────────────────────────────────────
+  mugetsu: {
+    mode: "dark",
+    bg: "#000000",
+    bgElevated: "rgba(1,1,1,.99)",
+    panel: "#030303",
+    panelSoft: "#080808",
+    text: "#ddd4d4",
+    muted: "#5c3a3a",
+    border: "rgba(100,0,0,.38)",
+    shadow: "0 0 0 1px rgba(60,0,0,.28), 0 22px 60px rgba(0,0,0,.95)",
+    accent: "#8b0000",
+    accent2: "#3d0000",
+    gridRgb: "100 0 0",
+    gridRgb2: "45 0 0",
+    gridRgb3: "6 0 0"
+  },
+  fullbringIchigo: {
+    mode: "dark",
+    bg: "#080404",
+    bgElevated: "rgba(18,10,10,.97)",
+    panel: "#170d0d",
+    panelSoft: "#291616",
+    text: "#fceded",
+    muted: "#c7a3a3",
+    border: "rgba(231,76,60,.3)",
+    shadow: "0 0 0 1px rgba(243,156,18,.15), 0 22px 60px rgba(0,0,0,.70)",
+    accent: "#e74c3c",
+    accent2: "#f39c12",
+    gridRgb: "231 76 60",
+    gridRgb2: "243 156 18",
+    gridRgb3: "23 13 13"
+  },
+  quincyIchigo: {
+    mode: "dark",
+    bg: "#04070f",
+    bgElevated: "rgba(8,13,26,.97)",
+    panel: "#0f1830",
+    panelSoft: "#1b294d",
+    text: "#f0f4fa",
+    muted: "#a1b4d4",
+    border: "rgba(52,152,219,.3)",
+    shadow: "0 0 0 1px rgba(255,255,255,.25), 0 22px 60px rgba(0,0,0,.65)",
+    accent: "#3498db",
+    accent2: "#ffffff",
+    gridRgb: "52 152 219",
+    gridRgb2: "255 255 255",
+    gridRgb3: "15 24 48"
+  },
+  artworksIchigo: {
+    mode: "dark",
+    bg: "#050506",
+    bgElevated: "rgba(15,15,18,.97)",
+    panel: "#121217",
+    panelSoft: "#212129",
+    text: "#fafafc",
+    muted: "#a5a5ab",
+    border: "rgba(255,255,255,.15)",
+    shadow: "0 0 0 1px rgba(211,84,0,.2), 0 22px 60px rgba(0,0,0,.75)",
+    accent: "#ffffff",
+    accent2: "#d35400",
+    gridRgb: "255 255 255",
+    gridRgb2: "211 84 0",
+    gridRgb3: "18 18 23"
+  },
+  timeskipIchigo: {
+    mode: "dark",
+    bg: "#060403",
+    bgElevated: "rgba(15,11,8,.97)",
+    panel: "#14100c",
+    panelSoft: "#241d16",
+    text: "#fcf9f6",
+    muted: "#d6be9f",
+    border: "rgba(230,126,34,.26)",
+    shadow: "0 0 0 1px rgba(255,255,255,.08), 0 22px 60px rgba(0,0,0,.70)",
+    accent: "#e67e22",
+    accent2: "#ffffff",
+    gridRgb: "230 126 34",
+    gridRgb2: "255 255 255",
+    gridRgb3: "20 16 12"
+  },
+
+  // ── TOUHOU PROJECT ───────────────────────────────────────────
+  meiling: {
+    mode: "dark",
+    bg: "#05120a",
+    bgElevated: "rgba(8,20,13,.97)",
+    panel: "#0b2013",
+    panelSoft: "#143320",
+    text: "#f4f7f5",
+    muted: "#e5c158",
+    border: "rgba(46,204,113,.26)",
+    shadow: "0 0 0 1px rgba(231,76,60,.14), 0 22px 60px rgba(0,0,0,.60)",
+    accent: "#2ecc71",
+    accent2: "#e74c3c",
+    gridRgb: "46 204 113",
+    gridRgb2: "231 76 60",
+    gridRgb3: "10 24 16"
+  },
+  marisa: {
+    mode: "dark",
+    bg: "#09090b",
+    bgElevated: "rgba(18,18,22,.97)",
+    panel: "#14141a",
+    panelSoft: "#24242e",
+    text: "#fafaf7",
+    muted: "#eadeb8",
+    border: "rgba(241,196,15,.3)",
+    shadow: "0 0 0 1px rgba(255,255,255,.15), 0 22px 60px rgba(0,0,0,.60)",
+    accent: "#f1c40f",
+    accent2: "#ffffff",
+    gridRgb: "241 196 15",
+    gridRgb2: "255 255 255",
+    gridRgb3: "20 20 26"
+  },
+  sakuya: {
+    mode: "dark",
+    bg: "#06090e",
+    bgElevated: "rgba(12,17,26,.97)",
+    panel: "#101621",
+    panelSoft: "#1b2536",
+    text: "#f2f5f8",
+    muted: "#b3c1d4",
+    border: "rgba(52,152,219,.26)",
+    shadow: "0 0 0 1px rgba(149,165,166,.2), 0 22px 60px rgba(0,0,0,.60)",
+    accent: "#3498db",
+    accent2: "#95a5a6",
+    gridRgb: "52 152 219",
+    gridRgb2: "149 165 166",
+    gridRgb3: "16 22 33"
+  },
+  remilia: {
+    mode: "dark",
+    bg: "#0c050b",
+    bgElevated: "rgba(22,12,20,.97)",
+    panel: "#1b1019",
+    panelSoft: "#2e1c2b",
+    text: "#fcf5fa",
+    muted: "#d9b3d2",
+    border: "rgba(155,89,182,.3)",
+    shadow: "0 0 0 1px rgba(192,57,43,.25), 0 22px 60px rgba(0,0,0,.60)",
+    accent: "#9b59b6",
+    accent2: "#c0392b",
+    gridRgb: "155 89 182",
+    gridRgb2: "192 57 43",
+    gridRgb3: "27 16 25"
+  },
+  flandre: {
+    mode: "dark",
+    bg: "#0a0505",
+    bgElevated: "rgba(16,8,8,.97)",
+    panel: "#140808",
+    panelSoft: "#221010",
+    text: "#fff8f0",
+    muted: "#e6c86a",
+    border: "rgba(255,215,0,.32)",
+    shadow: "0 0 0 1px rgba(255,215,0,.2), 0 22px 60px rgba(0,0,0,.65)",
+    accent: "#ffd700",
+    accent2: "#ff5252",
+    accentPulseA: "#ffd700",
+    accentPulseB: "#ff5252",
+    gridRgb: "255 215 0",
+    gridRgb2: "255 82 82",
+    gridRgb3: "255 193 7"
+  },
+  trish: {
+    mode: "dark",
+    bg: "#050505",
+    bgElevated: "rgba(8,8,8,.98)",
+    panel: "#0d0d0d",
+    panelSoft: "#161616",
+    text: "#fff4fa",
+    muted: "#ffeb3b",
+    border: "rgba(255,105,180,.34)",
+    shadow: "0 0 0 1px rgba(255,235,59,.16), 0 22px 60px rgba(0,0,0,.88)",
+    accent: "#ff69b4",
+    accent2: "#ffeb3b",
+    gridRgb: "255 105 180",
+    gridRgb2: "255 235 59",
+    gridRgb3: "18 18 18"
   }
 };
 
@@ -2932,6 +3319,8 @@ let splitViewEnabled = false;
 let splitPageId = "";
 let currentTrackIndex = -1;
 let currentTrackUrl = "";
+let trackUrlCache = new Map();
+let audioPlaybackPrimed = false;
 let audioContext = null;
 let analyser = null;
 let sourceNode = null;
@@ -3405,11 +3794,74 @@ function disableBoardEncryption(){
   setStatus("Board encryption disabled");
 }
 
+function getSavedThemeKey(themeId){
+  return "saved:" + themeId;
+}
+
+function getSavedThemeByKey(themeKey){
+  if(!themeKey || !themeKey.startsWith("saved:")) return null;
+  const themeId = themeKey.slice(6);
+  return settings.savedCustomThemes.find(theme => theme.id === themeId) || null;
+}
+
+function buildThemePresetFromCustomTheme(customTheme, visualizerMode, visualizerColorA, visualizerColorB){
+  const mode = getPerceivedMode(customTheme.bg, customTheme.text);
+  return {
+    mode,
+    bg: customTheme.bg,
+    bgElevated: hexToRgba(customTheme.panel, 0.96),
+    panel: customTheme.panel,
+    panelSoft: customTheme.panelSoft,
+    text: customTheme.text,
+    muted: customTheme.muted,
+    border: hexToRgba(customTheme.border, 0.28),
+    shadow: "0 0 0 1px " + hexToRgba(customTheme.border, 0.16) + ", 0 22px 60px rgba(0,0,0,.55)",
+    accent: customTheme.accent,
+    accent2: customTheme.accent2 || customTheme.accent,
+    gridRgb: hexToRgbString(customTheme.grid),
+    gridRgb2: hexToRgbString(customTheme.grid),
+    gridRgb3: hexToRgbString(customTheme.grid),
+    image: customTheme.image,
+    visualizerMode,
+    visualizerColorA,
+    visualizerColorB
+  };
+}
+
 function getThemePresetByKey(themeKey){
   if(themeKey === "custom"){
     return buildCustomThemePreset();
   }
+  const savedTheme = getSavedThemeByKey(themeKey);
+  if(savedTheme){
+    return buildThemePresetFromCustomTheme(
+      savedTheme.customTheme,
+      savedTheme.visualizerMode,
+      savedTheme.visualizerColorA,
+      savedTheme.visualizerColorB
+    );
+  }
   return themePresets[themeKey] || themePresets.crimson;
+}
+
+function updateThemeSelectOptions(){
+  ["themeSelect", "pageThemeSelect"].forEach(selectId => {
+    const select = document.getElementById(selectId);
+    if(!select) return;
+    select.querySelectorAll('optgroup[data-custom-themes="1"]').forEach(group => group.remove());
+    if(settings.savedCustomThemes.length === 0) return;
+
+    const group = document.createElement("optgroup");
+    group.label = "Your Custom Themes";
+    group.dataset.customThemes = "1";
+    settings.savedCustomThemes.forEach(theme => {
+      const option = document.createElement("option");
+      option.value = getSavedThemeKey(theme.id);
+      option.textContent = theme.name;
+      group.appendChild(option);
+    });
+    select.appendChild(group);
+  });
 }
 
 function getActiveThemePreset(){
@@ -3434,7 +3886,13 @@ function syncPageFxControls(){
   document.getElementById("pageFxHint").textContent = hasPage
     ? "These effects are saved only on this page."
     : "Select a page to tune its own theme, tilt, and music-reactive background.";
-  document.getElementById("pageThemeSelect").value = hasPage ? pageFx.theme : "";
+  const pageThemeSelect = document.getElementById("pageThemeSelect");
+  const pageThemeValue = hasPage ? (pageFx.theme || "") : "";
+  if([...pageThemeSelect.options].some(option => option.value === pageThemeValue)){
+    pageThemeSelect.value = pageThemeValue;
+  } else {
+    pageThemeSelect.value = "";
+  }
   document.getElementById("pageTiltRange").value = hasPage ? pageFx.tilt : 0;
   document.getElementById("pageMusicPulseToggle").checked = hasPage ? pageFx.musicPulse : false;
   document.getElementById("pagePulseStyleSelect").value = hasPage ? pageFx.pulseStyle : "bass";
@@ -3480,6 +3938,7 @@ function applySettings(){
   document.body.classList.toggle("compact", settings.compact);
   document.body.classList.toggle("reduce-motion", settings.reduceMotion);
   document.body.classList.toggle("theme-ninecircles", activeThemeKey === "ninecircles" && !settings.reduceMotion);
+  document.body.classList.toggle("theme-flandre", activeThemeKey === "flandre" && !settings.reduceMotion);
   const faviconEl = document.getElementById("appFavicon");
   if(faviconEl){
     faviconEl.href = settings.favicon || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23090909'/%3E%3Crect x='10' y='10' width='44' height='44' fill='%23ff2a2a'/%3E%3C/svg%3E";
@@ -3511,7 +3970,18 @@ function applySettings(){
   document.documentElement.style.setProperty("--page-tilt", (selectedPage ? pageFx.tilt : 0) + "deg");
   document.documentElement.style.setProperty("--cd-imprint-url", settings.cdImprintImage ? "url(" + JSON.stringify(settings.cdImprintImage) + ")" : "none");
 
-  document.getElementById("themeSelect").value = settings.theme;
+  updateThemeSelectOptions();
+  const themeSelect = document.getElementById("themeSelect");
+  const pageThemeSelect = document.getElementById("pageThemeSelect");
+  if([...themeSelect.options].some(option => option.value === settings.theme)){
+    themeSelect.value = settings.theme;
+  }
+  if(selectedPage && pageThemeSelect){
+    const pageThemeValue = pageFx.theme || "";
+    if([...pageThemeSelect.options].some(option => option.value === pageThemeValue)){
+      pageThemeSelect.value = pageThemeValue;
+    }
+  }
   document.getElementById("accentSelect").value = settings.accent;
   document.getElementById("fontSizeRange").value = settings.fontSize;
   document.getElementById("bgOpacityRange").value = settings.bgOpacity;
@@ -3612,24 +4082,12 @@ function updateSelectedPageFx(patch, message){
 }
 
 function buildCustomThemePreset(){
-  const mode = getPerceivedMode(settings.customTheme.bg, settings.customTheme.text);
-  return {
-    mode,
-    bg: settings.customTheme.bg,
-    bgElevated: hexToRgba(settings.customTheme.panel, 0.96),
-    panel: settings.customTheme.panel,
-    panelSoft: settings.customTheme.panelSoft,
-    text: settings.customTheme.text,
-    muted: settings.customTheme.muted,
-    border: hexToRgba(settings.customTheme.border, 0.28),
-    shadow: "0 0 0 1px " + hexToRgba(settings.customTheme.border, 0.16) + ", 0 22px 60px rgba(0,0,0,.55)",
-    accent: settings.customTheme.accent,
-    accent2: settings.customTheme.accent2 || settings.customTheme.accent,
-    gridRgb: hexToRgbString(settings.customTheme.grid),
-    gridRgb2: hexToRgbString(settings.customTheme.grid),
-    gridRgb3: hexToRgbString(settings.customTheme.grid),
-    image: settings.customTheme.image
-  };
+  return buildThemePresetFromCustomTheme(
+    settings.customTheme,
+    settings.visualizerMode,
+    settings.visualizerColorA,
+    settings.visualizerColorB
+  );
 }
 
 function shadeColor(hex, percent){
@@ -3791,6 +4249,31 @@ function confirmAction(message){
   return settings.confirmDeletes ? confirm(message) : true;
 }
 
+function revokeCachedTrackUrl(id){
+  const cachedUrl = trackUrlCache.get(id);
+  if(cachedUrl && cachedUrl.startsWith("blob:")){
+    URL.revokeObjectURL(cachedUrl);
+  }
+  trackUrlCache.delete(id);
+}
+
+function clearTrackUrlCache(){
+  trackUrlCache.forEach(url => {
+    if(String(url).startsWith("blob:")){
+      URL.revokeObjectURL(url);
+    }
+  });
+  trackUrlCache.clear();
+}
+
+function cacheTrackBlob(id, file){
+  if(!id || !file) return;
+  const mimeType = file.type || "application/octet-stream";
+  const blob = file instanceof Blob ? file : new Blob([file], { type: mimeType });
+  revokeCachedTrackUrl(id);
+  trackUrlCache.set(id, URL.createObjectURL(blob));
+}
+
 function saveFile(file, type, callback){
   if(!dbReady){
     alert("Wait for the database to finish loading.");
@@ -3798,9 +4281,35 @@ function saveFile(file, type, callback){
   }
 
   const id = crypto.randomUUID();
-  const tx = db.transaction("files", "readwrite");
-  tx.objectStore("files").put({ id, file, type });
-  tx.oncomplete = () => callback(id);
+  const mimeType = file.type || "application/octet-stream";
+  if(type === "audio"){
+    cacheTrackBlob(id, file);
+  }
+
+  const persist = buffer => {
+    const tx = db.transaction("files", "readwrite");
+    tx.objectStore("files").put({
+      id,
+      file,
+      buffer,
+      type,
+      mimeType,
+      name: file.name || ""
+    });
+    tx.oncomplete = () => callback(id);
+    tx.onerror = () => alert("Could not save file to storage.");
+  };
+
+  if(typeof file.arrayBuffer === "function"){
+    file.arrayBuffer().then(persist).catch(() => {
+      const tx = db.transaction("files", "readwrite");
+      tx.objectStore("files").put({ id, file, type, mimeType, name: file.name || "" });
+      tx.oncomplete = () => callback(id);
+      tx.onerror = () => alert("Could not save file to storage.");
+    });
+  } else {
+    persist(null);
+  }
 }
 
 function saveFileWithId(id, file, type){
@@ -3810,10 +4319,35 @@ function saveFileWithId(id, file, type){
       return;
     }
 
-    const tx = db.transaction("files", "readwrite");
-    tx.objectStore("files").put({ id, file, type });
-    tx.oncomplete = () => resolve(id);
-    tx.onerror = () => reject(tx.error || new Error("Failed to store file"));
+    const mimeType = file.type || "application/octet-stream";
+    if(type === "audio"){
+      cacheTrackBlob(id, file);
+    }
+
+    const persist = buffer => {
+      const tx = db.transaction("files", "readwrite");
+      tx.objectStore("files").put({
+        id,
+        file,
+        buffer,
+        type,
+        mimeType,
+        name: file.name || ""
+      });
+      tx.oncomplete = () => resolve(id);
+      tx.onerror = () => reject(tx.error || new Error("Failed to store file"));
+    };
+
+    if(typeof file.arrayBuffer === "function"){
+      file.arrayBuffer().then(persist).catch(() => {
+        const tx = db.transaction("files", "readwrite");
+        tx.objectStore("files").put({ id, file, type, mimeType, name: file.name || "" });
+        tx.oncomplete = () => resolve(id);
+        tx.onerror = () => reject(tx.error || new Error("Failed to store file"));
+      });
+    } else {
+      persist(null);
+    }
   });
 }
 
@@ -3838,13 +4372,47 @@ function clearStoredFiles(){
 }
 
 function loadFile(id, callback){
-  if(!dbReady) return;
-  const tx = db.transaction("files", "readonly");
-  const req = tx.objectStore("files").get(id);
-  req.onsuccess = () => {
-    if(!req.result) return;
-    callback(URL.createObjectURL(req.result.file));
-  };
+  loadFileAsync(id).then(url => {
+    if(url) callback(url);
+  });
+}
+
+function blobFromStoredRecord(record){
+  if(!record) return null;
+  if(record.file instanceof Blob){
+    return record.file;
+  }
+  if(record.buffer){
+    return new Blob([record.buffer], { type: record.mimeType || record.file?.type || "application/octet-stream" });
+  }
+  return null;
+}
+
+function getCachedTrackUrl(id){
+  return trackUrlCache.get(id) || null;
+}
+
+function rememberTrackUrl(id, url){
+  if(!id || !url) return url;
+  trackUrlCache.set(id, url);
+  return url;
+}
+
+async function getTrackPlaybackUrl(trackId){
+  if(!trackId) return null;
+  const cached = getCachedTrackUrl(trackId);
+  if(cached) return cached;
+
+  const record = await getStoredFileRecord(trackId).catch(() => null);
+  const blob = blobFromStoredRecord(record);
+  if(!blob){
+    return null;
+  }
+  return rememberTrackUrl(trackId, URL.createObjectURL(blob));
+}
+
+function loadFileAsync(id){
+  return getTrackPlaybackUrl(id);
 }
 
 function getStoredFileRecord(id){
@@ -4111,15 +4679,101 @@ async function restoreFolderMediaFiles(bundle, mediaFolderHandle){
   }
 }
 
-async function applyImportedPayload(parsed, mediaRestoreFn){
+function getBackupImportMode(){
+  const selected = document.querySelector('input[name="backupImportMode"]:checked');
+  return selected && selected.value === "merge" ? "merge" : "replace";
+}
+
+function mergeFolderArrays(target, incoming){
+  incoming.forEach(inFolder => {
+    const match = target.find(folder => folder.id === inFolder.id);
+    if(match){
+      inFolder.pages.forEach(inPage => {
+        const pageMatch = match.pages.find(page => page.id === inPage.id);
+        if(pageMatch){
+          Object.assign(pageMatch, inPage);
+        } else {
+          match.pages.push(inPage);
+        }
+      });
+      mergeFolderArrays(match.children, inFolder.children);
+    } else {
+      target.push(inFolder);
+    }
+  });
+}
+
+async function mergeImportedPayload(parsed, mediaRestoreFn){
   if(!parsed || !parsed.data || !Array.isArray(parsed.data.folders)){
     throw new Error("Invalid file");
   }
 
-  if(!confirmAction("Import this file and replace the current notes and folders?")){
+  const incoming = normalizeData(parsed.data);
+  mergeFolderArrays(data.folders, incoming.folders);
+
+  if(Array.isArray(incoming.categoryOrder)){
+    incoming.categoryOrder.forEach(category => {
+      if(!data.categoryOrder.includes(category)){
+        data.categoryOrder.push(category);
+      }
+    });
+  }
+
+  data.categoryIcons = {
+    ...(data.categoryIcons || {}),
+    ...(incoming.categoryIcons || {})
+  };
+
+  if(parsed.settings){
+    const incomingAssets = Array.isArray(parsed.settings.assetLibrary) ? parsed.settings.assetLibrary : [];
+    incomingAssets.forEach(asset => {
+      if(asset?.id && !settings.assetLibrary.find(item => item.id === asset.id)){
+        settings.assetLibrary.push(asset);
+      }
+    });
+
+    const incomingThemes = Array.isArray(parsed.settings.savedCustomThemes) ? parsed.settings.savedCustomThemes : [];
+    const themeById = new Map(settings.savedCustomThemes.map(theme => [theme.id, theme]));
+    incomingThemes.forEach(theme => themeById.set(theme.id || crypto.randomUUID(), theme));
+    settings.savedCustomThemes = Array.from(themeById.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  if(dbReady && Array.isArray(parsed.mediaFiles) && parsed.mediaFiles.length > 0){
+    setBackupStatus("Merging media files...");
+    if(typeof mediaRestoreFn === "function"){
+      await mediaRestoreFn(parsed.mediaFiles);
+    } else {
+      await restoreMediaFiles(parsed.mediaFiles);
+    }
+  }
+
+  clearTrackUrlCache();
+  save();
+  saveSettings();
+  setBackupStatus("Merge completed");
+  setStatus("Import merge completed");
+  render();
+  return true;
+}
+
+async function applyImportedPayload(parsed, mediaRestoreFn, mode = "replace"){
+  if(!parsed || !parsed.data || !Array.isArray(parsed.data.folders)){
+    throw new Error("Invalid file");
+  }
+
+  if(mode === "merge"){
+    if(!confirmAction("Merge this backup into the current board? Existing content will be kept and updated.")){
+      return false;
+    }
+    return mergeImportedPayload(parsed, mediaRestoreFn);
+  }
+
+  const silentReplace = mode === "replace-silent";
+  if(!silentReplace && !confirmAction("Import this file and replace the current notes and folders?")){
     return false;
   }
 
+  clearTrackUrlCache();
   data = normalizeData(parsed.data);
   settings = { ...defaultSettings, ...(parsed.settings || settings) };
   settings.customTheme = {
@@ -4130,7 +4784,7 @@ async function applyImportedPayload(parsed, mediaRestoreFn){
   settings.assetLibrary = Array.isArray(settings.assetLibrary) ? settings.assetLibrary : [];
 
   if(dbReady){
-    setStatus("Restoring media files...");
+    setBackupStatus("Restoring media files...");
     await clearStoredFiles();
     if(typeof mediaRestoreFn === "function"){
       await mediaRestoreFn(parsed.mediaFiles || []);
@@ -4144,9 +4798,50 @@ async function applyImportedPayload(parsed, mediaRestoreFn){
   loadPage();
   save();
   saveSettings();
-  setStatus(Array.isArray(parsed.mediaFiles) && parsed.mediaFiles.length > 0 ? "Import completed with media" : "Import completed");
+  const mediaCount = Array.isArray(parsed.mediaFiles) ? parsed.mediaFiles.length : 0;
+  setBackupStatus(mediaCount > 0 ? "Import completed with " + mediaCount + " media file(s)" : "Import completed");
+  setStatus(mediaCount > 0 ? "Import completed with media" : "Import completed");
   render();
   return true;
+}
+
+function openBackupModal(){
+  document.getElementById("backupModal").classList.remove("hidden");
+  setBackupStatus("Ready");
+}
+
+function closeBackupModal(){
+  document.getElementById("backupModal").classList.add("hidden");
+}
+
+function setBackupStatus(message){
+  const el = document.getElementById("backupStatus");
+  if(el) el.textContent = message || "";
+  if(message) setStatus(message);
+}
+
+function getExportTimestamp(){
+  return new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+}
+
+function shouldIncludeMediaInExport(){
+  const checkbox = document.getElementById("backupIncludeMedia");
+  return !checkbox || checkbox.checked;
+}
+
+async function applyImportedData(parsed){
+  return applyImportedPayload(parsed, null, "replace-silent");
+}
+
+async function loadRoomBoard(boardEntry){
+  if(!boardEntry || !boardEntry.json){
+    throw new Error("Board is still receiving");
+  }
+  const parsed = JSON.parse(boardEntry.json);
+  const restored = await applyImportedPayload(parsed, null, "replace-silent");
+  if(restored === false){
+    throw new Error("Board import was canceled");
+  }
 }
 
 function render(){
@@ -4621,7 +5316,7 @@ function getCommandPaletteItems(){
   const actions = [
     { id: "action-settings", label: "Open Settings", hint: "Action", run: () => openSettings() },
     { id: "action-map", label: "Open Board Map", hint: "Action", run: () => openBoardMap() },
-    { id: "action-export", label: "Export Board", hint: "Action", run: () => exportData() },
+    { id: "action-export", label: "Backup & Restore", hint: "Action", run: () => openBackupModal() },
     { id: "action-new-page", label: "Create New Page", hint: "Action", run: () => addPage() },
     { id: "action-new-folder", label: "Create New Folder", hint: "Action", run: () => addRoot() }
   ];
@@ -5994,6 +6689,8 @@ function renderMusic(){
     row.className = "item-row";
 
     const play = document.createElement("button");
+    play.type = "button";
+    play.className = "track-play";
     play.textContent = trackData.name || ("Track " + (index + 1));
     play.onclick = () => {
       playTrackAtIndex(index);
@@ -6010,6 +6707,7 @@ function renderMusic(){
     del.onclick = () => {
       if(!confirmAction("Remove this track?")) return;
       deleteFile(trackData.id);
+      revokeCachedTrackUrl(trackData.id);
       selectedPage.music.splice(index, 1);
       if(index === currentTrackIndex){
         stopCurrentTrackPlayback(true);
@@ -6029,6 +6727,7 @@ function renderMusic(){
     list.appendChild(trackEl);
   });
 
+  prefetchPageTracks();
   updatePlayerUi();
 }
 
@@ -6094,6 +6793,7 @@ function getVisualizerColors(index, total){
 
 function stopCurrentTrackPlayback(clearSource = false){
   const audio = document.getElementById("audio");
+  if(!audio) return;
   desiredPlayback = false;
   if(resumePlaybackTimer){
     clearTimeout(resumePlaybackTimer);
@@ -6104,10 +6804,8 @@ function stopCurrentTrackPlayback(clearSource = false){
   if(clearSource){
     audio.removeAttribute("src");
     audio.load();
-    if(currentTrackUrl){
-      URL.revokeObjectURL(currentTrackUrl);
-      currentTrackUrl = "";
-    }
+    currentTrackUrl = "";
+    resetAudioAnalyzer();
   }
 }
 
@@ -6138,44 +6836,152 @@ async function resumePlaybackIfNeeded(){
   }
 }
 
-async function ensureAudioAnalyzer(){
-  if(audioContext && analyser) return;
-  const audio = document.getElementById("audio");
-  const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
-  if(!AudioContextCtor) return;
-
-  audioContext = new AudioContextCtor();
-  analyser = audioContext.createAnalyser();
-  analyser.fftSize = 256;
-  sourceNode = audioContext.createMediaElementSource(audio);
-  sourceNode.connect(analyser);
-  analyser.connect(audioContext.destination);
+function resetAudioAnalyzer(){
+  try{
+    if(sourceNode){
+      sourceNode.disconnect();
+      sourceNode = null;
+    }
+    if(analyser){
+      analyser.disconnect();
+      analyser = null;
+    }
+  } catch(error){
+    console.warn("Audio analyzer reset failed:", error);
+  }
 }
 
-async function playTrackAtIndex(index){
+function ensureAudioAnalyzer(){
+  const audio = document.getElementById("audio");
+  const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+  if(!AudioContextCtor || !audio || audio.paused) return;
+
+  try{
+    if(!audioContext){
+      audioContext = new AudioContextCtor();
+    }
+    if(audioContext.state === "suspended"){
+      audioContext.resume().catch(() => {});
+    }
+    if(!analyser){
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.82;
+    }
+    if(!sourceNode){
+      if(typeof audio.captureStream === "function"){
+        const stream = audio.captureStream();
+        sourceNode = audioContext.createMediaStreamSource(stream);
+        sourceNode.connect(analyser);
+      } else {
+        sourceNode = audioContext.createMediaElementSource(audio);
+        sourceNode.connect(analyser);
+        analyser.connect(audioContext.destination);
+      }
+    }
+  } catch(error){
+    console.warn("Visualizer audio routing unavailable:", error);
+    resetAudioAnalyzer();
+  }
+}
+
+const SILENT_WAV = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA=";
+
+function primeAudioPlayback(){
+  const audio = document.getElementById("audio");
+  if(!audio || audioPlaybackPrimed) return;
+  const volumeBar = document.getElementById("volumeBar");
+  audio.volume = Number(volumeBar && volumeBar.value ? volumeBar.value : 80) / 100;
+  const previousSrc = audio.currentSrc || "";
+  audio.src = SILENT_WAV;
+  const prime = audio.play();
+  const finishPrime = () => {
+    audio.pause();
+    if(previousSrc){
+      audio.src = previousSrc;
+    } else {
+      audio.removeAttribute("src");
+    }
+    audioPlaybackPrimed = true;
+  };
+  if(prime && prime.then){
+    prime.then(finishPrime).catch(() => {
+      audioPlaybackPrimed = true;
+    });
+  } else {
+    finishPrime();
+  }
+}
+
+function prefetchPageTracks(){
+  if(!selectedPage || !Array.isArray(selectedPage.music)) return;
+  selectedPage.music.forEach(trackItem => {
+    const track = typeof trackItem === "string" ? { id: trackItem } : trackItem;
+    if(!track?.id || getCachedTrackUrl(track.id)) return;
+    getTrackPlaybackUrl(track.id);
+  });
+}
+
+function beginTrackPlayback(url){
+  const audio = document.getElementById("audio");
+  if(!audio || !url) return;
+
+  desiredPlayback = true;
+  currentTrackUrl = url;
+  const volumeBar = document.getElementById("volumeBar");
+  audio.volume = Number(volumeBar && volumeBar.value ? volumeBar.value : 80) / 100;
+
+  if(audio.src !== url){
+    resetAudioAnalyzer();
+    audio.src = url;
+    audio.load();
+  }
+
+  const playPromise = audio.play();
+  if(!playPromise || !playPromise.then){
+    updatePlayerUi();
+    startVisualizer();
+    return;
+  }
+
+  playPromise.then(() => {
+    ensureAudioAnalyzer();
+    setStatus("Playing");
+    updatePlayerUi();
+    startVisualizer();
+  }).catch(error => {
+    console.warn("Audio play failed:", error);
+    desiredPlayback = true;
+    setStatus("Press the Play button to start audio");
+    updatePlayerUi();
+  });
+}
+
+function playTrackAtIndex(index){
   const list = getTrackList();
   if(index < 0 || index >= list.length) return;
 
   const track = list[index];
-  const audio = document.getElementById("audio");
   currentTrackIndex = index;
+  primeAudioPlayback();
+  updatePlayerUi();
+  setStatus("Loading track...");
 
-  if(currentTrackUrl){
-    URL.revokeObjectURL(currentTrackUrl);
-    currentTrackUrl = "";
+  const cachedUrl = getCachedTrackUrl(track.id);
+  if(cachedUrl){
+    beginTrackPlayback(cachedUrl);
+    return;
   }
 
-  loadFile(track.id, async url => {
-    currentTrackUrl = url;
-    audio.src = url;
-    desiredPlayback = true;
-    await ensureAudioAnalyzer();
-    if(audioContext && audioContext.state === "suspended"){
-      await audioContext.resume();
+  getTrackPlaybackUrl(track.id).then(url => {
+    if(currentTrackIndex !== index) return;
+    if(!url){
+      desiredPlayback = false;
+      setStatus("Track file not found — try re-adding the audio file");
+      updatePlayerUi();
+      return;
     }
-    await audio.play().catch(() => {});
-    updatePlayerUi();
-    startVisualizer();
+    beginTrackPlayback(url);
   });
 }
 
@@ -6197,22 +7003,32 @@ function toggleCurrentTrackPlayback(){
   const audio = document.getElementById("audio");
   const list = getTrackList();
   if(list.length === 0) return;
+
+  primeAudioPlayback();
+
   if(currentTrackIndex === -1){
     playTrackAtIndex(0);
     return;
   }
+  if(!audio.src && getCurrentTrack()){
+    playTrackAtIndex(currentTrackIndex);
+    return;
+  }
   if(audio.paused){
     desiredPlayback = true;
-    audio.play().catch(() => {});
-    if(audioContext && audioContext.state === "suspended"){
-      audioContext.resume().catch(() => {});
-    }
-    startVisualizer();
+    audio.play().then(() => {
+      ensureAudioAnalyzer();
+      startVisualizer();
+      updatePlayerUi();
+    }).catch(() => {
+      setStatus("Could not start playback");
+      updatePlayerUi();
+    });
   } else {
     desiredPlayback = false;
     audio.pause();
+    updatePlayerUi();
   }
-  updatePlayerUi();
 }
 
 function updatePlayerUi(){
@@ -6224,6 +7040,7 @@ function updatePlayerUi(){
   const seekEl = document.getElementById("seekBar");
   const currentTimeEl = document.getElementById("currentTimeLabel");
   const durationEl = document.getElementById("durationLabel");
+  if(!audio || !titleEl || !subtitleEl || !buttonEl || !seekEl || !currentTimeEl || !durationEl) return;
 
   titleEl.textContent = currentTrack ? (currentTrack.name || "Untitled Track") : "No track selected";
   subtitleEl.textContent = currentTrack ? ("Track " + (currentTrackIndex + 1) + " of " + getTrackList().length) : "Choose a track from this page playlist.";
@@ -6303,29 +7120,42 @@ function startVisualizer(){
 
 async function exportData(){
   try{
-    const payload = await buildFullExportPayload();
+    const includeMedia = shouldIncludeMediaInExport();
+    setBackupStatus(includeMedia ? "Building export with media..." : "Building lightweight export...");
+    const payload = await buildFullExportPayload({ includeMedia });
 
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "info-board-export.json";
+    anchor.download = "info-board-backup-" + getExportTimestamp() + (includeMedia ? "" : "-lite") + ".json";
     anchor.click();
     URL.revokeObjectURL(url);
-    setStatus((payload.mediaFiles || []).length > 0 ? "Export created with media" : "Export created");
+    const mediaCount = (payload.mediaFiles || []).length;
+    const message = includeMedia
+      ? (mediaCount > 0 ? "Export created with " + mediaCount + " media file(s)" : "Export created (no media attached)")
+      : "Lightweight export created (notes and settings only)";
+    setBackupStatus(message);
+    setStatus(message);
   } catch(error){
     console.error(error);
-    alert("Export failed while preparing media files.");
+    alert("Export failed while preparing the backup.");
+    setBackupStatus("Export failed");
     setStatus("Export failed");
   }
 }
 
-async function buildFullExportPayload(){
-  setStatus("Building export with media...");
-  const mediaFiles = dbReady ? await buildMediaExportBundle() : [];
+async function buildFullExportPayload(options = {}){
+  const includeMedia = options.includeMedia !== false;
+  if(includeMedia){
+    setStatus("Building export with media...");
+  }
+  const mediaFiles = includeMedia && dbReady ? await buildMediaExportBundle() : [];
   return {
     version: 3,
     exportedAt: new Date().toISOString(),
+    format: includeMedia ? "full-backup" : "lite-backup",
+    includeMedia,
     settings,
     data,
     mediaFiles
@@ -6371,28 +7201,58 @@ async function pullLocalSync(){
   }
 }
 
-function exportThemePack(){
-  const payload = {
-    version: 1,
+function buildThemePackPayload(themeList){
+  const packNameInput = document.getElementById("themePackNameInput");
+  const packName = packNameInput && packNameInput.value.trim() ? packNameInput.value.trim() : "Theme Pack";
+  return {
+    version: 2,
     exportedAt: new Date().toISOString(),
     type: "info-board-theme-pack",
+    packName,
     theme: settings.theme,
     accent: settings.accent,
     accent2: settings.accent2,
     customTheme: settings.customTheme,
-    savedCustomThemes: settings.savedCustomThemes,
+    savedCustomThemes: themeList,
     visualizerMode: settings.visualizerMode,
     visualizerColorA: settings.visualizerColorA,
     visualizerColorB: settings.visualizerColorB
   };
+}
+
+function downloadThemePackPayload(payload){
+  const slug = String(payload.packName || "theme-pack").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "theme-pack";
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = "info-board-theme-pack.json";
+  anchor.download = slug + "-" + getExportTimestamp() + ".json";
   anchor.click();
   URL.revokeObjectURL(url);
+}
+
+function exportThemePack(){
+  if(settings.savedCustomThemes.length === 0){
+    alert("Save at least one custom theme before exporting a pack.");
+    return;
+  }
+  const payload = buildThemePackPayload(settings.savedCustomThemes);
+  downloadThemePackPayload(payload);
+  setBackupStatus("Theme pack exported (" + payload.savedCustomThemes.length + " theme(s))");
   setStatus("Theme pack exported");
+}
+
+function exportSelectedThemePack(){
+  const select = document.getElementById("savedThemeSelect");
+  const selected = settings.savedCustomThemes.find(theme => theme.id === select.value);
+  if(!selected){
+    alert("Pick a saved theme to export.");
+    return;
+  }
+  const payload = buildThemePackPayload([selected]);
+  downloadThemePackPayload(payload);
+  setBackupStatus("Theme pack exported (" + selected.name + ")");
+  setStatus("Selected theme exported");
 }
 
 function importThemePackPayload(parsed){
@@ -6407,7 +7267,11 @@ function importThemePackPayload(parsed){
   const byId = new Map(settings.savedCustomThemes.map(theme => [theme.id, theme]));
   incoming.forEach(theme => byId.set(theme.id || crypto.randomUUID(), theme));
   settings.savedCustomThemes = Array.from(byId.values()).sort((a, b) => a.name.localeCompare(b.name));
-  settings.theme = parsed.theme || settings.theme;
+  if(parsed.theme && (themePresets[parsed.theme] || parsed.theme === "custom" || getSavedThemeByKey(parsed.theme))){
+    settings.theme = parsed.theme;
+  } else if(settings.savedCustomThemes.length > 0){
+    settings.theme = getSavedThemeKey(settings.savedCustomThemes[0].id);
+  }
   settings.accent = parsed.accent || settings.accent;
   settings.accent2 = parsed.accent2 || settings.accent2;
   settings.visualizerMode = parsed.visualizerMode || settings.visualizerMode;
@@ -6417,16 +7281,19 @@ function importThemePackPayload(parsed){
   applySettings();
   render();
   startVisualizer();
-  setStatus("Theme pack imported");
+  const packLabel = parsed.packName ? parsed.packName + " imported" : "Theme pack imported";
+  setBackupStatus(packLabel);
+  setStatus(packLabel);
 }
 
 async function exportFolderData(){
   try{
     if(typeof window.showDirectoryPicker !== "function"){
-      alert("Folder export needs a browser with File System Access support. Use the regular Export button if this one is unavailable.");
+      alert("Folder export needs a browser with File System Access support. Use Export JSON Backup if this option is unavailable.");
       return;
     }
 
+    setBackupStatus("Preparing folder export...");
     setStatus("Preparing folder export...");
     const directoryHandle = await window.showDirectoryPicker({ mode: "readwrite" });
     const exportFolder = await directoryHandle.getDirectoryHandle("info-board-export", { create: true });
@@ -6461,14 +7328,18 @@ async function exportFolderData(){
     await manifestWritable.write(JSON.stringify(manifest, null, 2));
     await manifestWritable.close();
 
-    setStatus(mediaFiles.length > 0 ? "Folder export created with media" : "Folder export created");
+    const folderMessage = mediaFiles.length > 0 ? "Folder export created with " + mediaFiles.length + " media file(s)" : "Folder export created";
+    setBackupStatus(folderMessage);
+    setStatus(folderMessage);
   } catch(error){
     if(error && error.name === "AbortError"){
+      setBackupStatus("Folder export canceled");
       setStatus("Folder export canceled");
       return;
     }
     console.error(error);
     alert("Folder export failed.");
+    setBackupStatus("Folder export failed");
     setStatus("Folder export failed");
   }
 }
@@ -6476,7 +7347,7 @@ async function exportFolderData(){
 async function importFolderData(){
   try{
     if(typeof window.showDirectoryPicker !== "function"){
-      alert("Folder import needs a browser with File System Access support. Use the regular Import button if this one is unavailable.");
+      alert("Folder import needs a browser with File System Access support. Use Import JSON Backup if this option is unavailable.");
       return;
     }
 
@@ -6499,14 +7370,16 @@ async function importFolderData(){
     const parsed = JSON.parse(manifestText);
     const mediaFolder = await importFolder.getDirectoryHandle("media");
 
-    await applyImportedPayload(parsed, bundle => restoreFolderMediaFiles(bundle, mediaFolder));
+    await applyImportedPayload(parsed, bundle => restoreFolderMediaFiles(bundle, mediaFolder), getBackupImportMode());
   } catch(error){
     if(error && error.name === "AbortError"){
+      setBackupStatus("Folder import canceled");
       setStatus("Folder import canceled");
       return;
     }
     console.error(error);
     alert("Folder import failed.");
+    setBackupStatus("Folder import failed");
     setStatus("Folder import failed");
   }
 }
@@ -6519,10 +7392,35 @@ document.getElementById("importInput").onchange = event => {
   reader.onload = async loadEvent => {
     try{
       const parsed = JSON.parse(loadEvent.target.result);
-      await applyImportedPayload(parsed);
+      if(parsed.type === "info-board-theme-pack"){
+        importThemePackPayload(parsed);
+        setBackupStatus("Theme pack imported");
+        return;
+      }
+      setBackupStatus("Importing backup...");
+      await applyImportedPayload(parsed, null, getBackupImportMode());
     } catch(error){
       console.error(error);
       alert("That file could not be imported.");
+      setBackupStatus("Import failed");
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = "";
+};
+
+document.getElementById("backupThemePackInput").onchange = event => {
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = loadEvent => {
+    try{
+      importThemePackPayload(JSON.parse(loadEvent.target.result));
+      setBackupStatus("Theme pack imported");
+    } catch(error){
+      console.error(error);
+      alert("That theme pack could not be imported.");
+      setBackupStatus("Theme import failed");
     }
   };
   reader.readAsText(file);
@@ -6590,7 +7488,6 @@ function saveCurrentCustomTheme(){
     return;
   }
 
-  settings.theme = "custom";
   const existing = settings.savedCustomThemes.find(theme => theme.name.toLowerCase() === name.toLowerCase());
   const payload = {
     id: existing ? existing.id : crypto.randomUUID(),
@@ -6604,10 +7501,13 @@ function saveCurrentCustomTheme(){
   settings.savedCustomThemes = settings.savedCustomThemes.filter(theme => theme.id !== payload.id);
   settings.savedCustomThemes.push(payload);
   settings.savedCustomThemes.sort((a, b) => a.name.localeCompare(b.name));
+  settings.theme = getSavedThemeKey(payload.id);
+  settings.accent = settings.customTheme.accent;
+  settings.accent2 = settings.customTheme.accent2 || settings.customTheme.accent;
   saveSettings();
   applySettings();
   document.getElementById("savedThemeSelect").value = payload.id;
-  setStatus("Custom theme saved");
+  setStatus("Custom theme saved to menu");
 }
 
 function loadSavedCustomTheme(){
@@ -6618,7 +7518,7 @@ function loadSavedCustomTheme(){
     return;
   }
 
-  settings.theme = "custom";
+  settings.theme = getSavedThemeKey(selected.id);
   settings.customTheme = {
     ...defaultSettings.customTheme,
     ...JSON.parse(JSON.stringify(selected.customTheme))
@@ -6643,6 +7543,9 @@ function deleteSavedCustomTheme(){
   }
   if(!confirmAction("Delete the saved theme '" + selected.name + "'?")) return;
 
+  if(settings.theme === getSavedThemeKey(selected.id)){
+    settings.theme = "crimson";
+  }
   settings.savedCustomThemes = settings.savedCustomThemes.filter(theme => theme.id !== selected.id);
   saveSettings();
   applySettings();
@@ -6651,7 +7554,18 @@ function deleteSavedCustomTheme(){
 
 document.getElementById("themeSelect").onchange = event => {
   settings.theme = event.target.value;
-  if(settings.theme === "custom"){
+  const savedTheme = getSavedThemeByKey(settings.theme);
+  if(savedTheme){
+    settings.customTheme = {
+      ...defaultSettings.customTheme,
+      ...JSON.parse(JSON.stringify(savedTheme.customTheme))
+    };
+    settings.visualizerMode = savedTheme.visualizerMode || settings.visualizerMode;
+    settings.visualizerColorA = savedTheme.visualizerColorA || settings.visualizerColorA;
+    settings.visualizerColorB = savedTheme.visualizerColorB || settings.visualizerColorB;
+    settings.accent = settings.customTheme.accent;
+    settings.accent2 = settings.customTheme.accent2 || settings.customTheme.accent;
+  } else if(settings.theme === "custom"){
     settings.accent = settings.customTheme.accent;
     settings.accent2 = settings.customTheme.accent2 || settings.customTheme.accent;
   } else {
@@ -6814,45 +7728,44 @@ const audioElement = document.getElementById("audio");
 const seekBar = document.getElementById("seekBar");
 const volumeBar = document.getElementById("volumeBar");
 
-audioElement.volume = Number(volumeBar.value) / 100;
-audioElement.addEventListener("timeupdate", updatePlayerUi);
-audioElement.addEventListener("loadedmetadata", updatePlayerUi);
-audioElement.addEventListener("play", () => {
-  updatePlayerUi();
-  startVisualizer();
-});
-audioElement.addEventListener("pause", () => {
-  updatePlayerUi();
-  if(desiredPlayback && !audioElement.ended){
-    schedulePlaybackResume();
-  }
-});
-audioElement.addEventListener("ended", playNextTrack);
-audioElement.addEventListener("stalled", () => {
-  if(desiredPlayback) schedulePlaybackResume(500);
-});
-audioElement.addEventListener("waiting", () => {
-  if(desiredPlayback) schedulePlaybackResume(500);
-});
-audioElement.addEventListener("suspend", () => {
-  if(desiredPlayback) schedulePlaybackResume(700);
-});
-audioElement.addEventListener("canplay", () => {
-  if(desiredPlayback && audioElement.paused){
-    schedulePlaybackResume(120);
-  }
-});
-
-seekBar.addEventListener("input", () => {
-  if(audioElement.duration){
-    audioElement.currentTime = (Number(seekBar.value) / 100) * audioElement.duration;
+if(audioElement){
+  audioElement.volume = Number(volumeBar && volumeBar.value ? volumeBar.value : 80) / 100;
+  audioElement.addEventListener("timeupdate", updatePlayerUi);
+  audioElement.addEventListener("loadedmetadata", updatePlayerUi);
+  audioElement.addEventListener("play", () => {
     updatePlayerUi();
-  }
-});
+    startVisualizer();
+  });
+  audioElement.addEventListener("pause", () => {
+    updatePlayerUi();
+  });
+  audioElement.addEventListener("ended", playNextTrack);
+  audioElement.addEventListener("error", () => {
+    const mediaError = audioElement.error;
+    const code = mediaError ? mediaError.code : 0;
+    if(code === 4){
+      setStatus("This audio format is not supported in your browser");
+    } else if(code){
+      setStatus("Could not load audio file");
+    }
+    updatePlayerUi();
+  });
+}
 
-volumeBar.addEventListener("input", () => {
-  audioElement.volume = Number(volumeBar.value) / 100;
-});
+if(seekBar && audioElement){
+  seekBar.addEventListener("input", () => {
+    if(audioElement.duration){
+      audioElement.currentTime = (Number(seekBar.value) / 100) * audioElement.duration;
+      updatePlayerUi();
+    }
+  });
+}
+
+if(volumeBar && audioElement){
+  volumeBar.addEventListener("input", () => {
+    audioElement.volume = Number(volumeBar.value) / 100;
+  });
+}
 
 document.addEventListener("visibilitychange", () => {
   if(!document.hidden && desiredPlayback){
@@ -7096,6 +8009,65 @@ var roomEditAutoSave    = null;
 var roomAutoSyncTimer   = null;
 var roomApplyingRemote  = false;
 const ROOM_CHUNK = 8 * 1024;  // 8KB — safe for WebRTC data channels
+const ROOM_IMAGE_MAX_BYTES = 120000;
+
+function getRoomChunkDelay(byteLength){
+  if(byteLength > 8000000) return 28;
+  if(byteLength > 2000000) return 18;
+  if(byteLength > 500000) return 12;
+  return 6;
+}
+
+function compressImageForRoom(file, maxWidth = 960, quality = 0.78){
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      const scale = Math.min(1, maxWidth / Math.max(image.width, image.height, 1));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(image.width * scale));
+      canvas.height = Math.max(1, Math.round(image.height * scale));
+      const ctx = canvas.getContext("2d");
+      if(!ctx){
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error("Could not prepare image"));
+        return;
+      }
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(objectUrl);
+      let dataUrl = canvas.toDataURL("image/jpeg", quality);
+      if(dataUrl.length > ROOM_IMAGE_MAX_BYTES){
+        dataUrl = canvas.toDataURL("image/jpeg", 0.55);
+      }
+      if(dataUrl.length > ROOM_IMAGE_MAX_BYTES){
+        reject(new Error("Image is still too large after compression"));
+        return;
+      }
+      resolve(dataUrl);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Invalid image file"));
+    };
+    image.src = objectUrl;
+  });
+}
+
+function assembleRoomFileEntry(fileEntry){
+  if(!fileEntry || fileEntry.data || !Array.isArray(fileEntry.chunks)) return false;
+  if(fileEntry.chunks.some(chunk => chunk === null)) return false;
+  fileEntry.data = new Blob(fileEntry.chunks.map(b64ToUint8), { type: fileEntry.mimeType || "application/octet-stream" });
+  fileEntry.chunks = null;
+  return true;
+}
+
+function assembleRoomBoardEntry(boardEntry){
+  if(!boardEntry || boardEntry.json || !Array.isArray(boardEntry.chunks)) return false;
+  if(boardEntry.chunks.some(chunk => chunk === null)) return false;
+  boardEntry.json = boardEntry.chunks.join("");
+  boardEntry.chunks = null;
+  return true;
+}
 
 // ── overlay ──────────────────────────────────────────────────
 function openRoomOverlay(){
@@ -7300,13 +8272,14 @@ function onMsg(msg, fromConn, fromId){
 
     case "file-chunk":{
       var fe = roomSharedFiles.find(function(f){ return f.id===msg.fileId; });
+      if(!fe && msg.meta){
+        fe = Object.assign({}, msg.meta, { chunks: new Array(msg.meta.totalChunks).fill(null), data: null });
+        roomSharedFiles.push(fe);
+        renderRoomFiles();
+      }
       if(fe && fe.chunks){
         fe.chunks[msg.index]=msg.data;
-        // Check if all chunks received
-        var received = fe.chunks.filter(function(c){return c!==null;}).length;
-        if(received === fe.totalChunks){
-          fe.data=new Blob(fe.chunks.map(b64ToUint8),{type:fe.mimeType});
-          fe.chunks=null;
+        if(assembleRoomFileEntry(fe)){
           renderRoomFiles();
           showRoomToast(fe.name + " received!");
         }
@@ -7316,16 +8289,10 @@ function onMsg(msg, fromConn, fromId){
     }
 
     case "file-complete":{
-      // Force-assemble any file that has all chunks but wasn't triggered yet
       var fc = roomSharedFiles.find(function(f){ return f.id===msg.fileId; });
-      if(fc && fc.chunks && !fc.data){
-        var filled = fc.chunks.filter(function(c){return c!==null;});
-        if(filled.length > 0){
-          fc.data=new Blob(filled.map(b64ToUint8),{type:fc.mimeType});
-          fc.chunks=null;
-          renderRoomFiles();
-          showRoomToast(fc.name + " received!");
-        }
+      if(fc && assembleRoomFileEntry(fc)){
+        renderRoomFiles();
+        showRoomToast(fc.name + " received!");
       }
       if(roomIsHost) relay(fromId, msg);
       break;
@@ -7357,12 +8324,16 @@ function onMsg(msg, fromConn, fromId){
 
     case "board-chunk":{
       var be = roomSharedBoards.find(function(b){ return b.id===msg.boardId; });
+      if(!be && msg.meta){
+        be = Object.assign({}, msg.meta, { chunks: new Array(msg.meta.totalChunks).fill(null), json: "" });
+        roomSharedBoards.push(be);
+        renderRoomBoards();
+      }
       if(be && be.chunks){
         be.chunks[msg.index]=msg.data;
-        var gotAll = be.chunks.filter(function(c){return c!==null;}).length;
-        if(gotAll === be.totalChunks){
-          be.json=be.chunks.join(""); be.chunks=null;
-          renderRoomBoards(); showRoomToast("Board received!");
+        if(assembleRoomBoardEntry(be)){
+          renderRoomBoards();
+          showRoomToast("Board received!");
         }
       }
       if(roomIsHost) relay(fromId, msg);
@@ -7371,12 +8342,9 @@ function onMsg(msg, fromConn, fromId){
 
     case "board-complete":{
       var bc = roomSharedBoards.find(function(b){ return b.id===msg.boardId; });
-      if(bc && bc.chunks && !bc.json){
-        var filled = bc.chunks.filter(function(c){return c!==null;});
-        if(filled.length > 0){
-          bc.json=filled.join(""); bc.chunks=null;
-          renderRoomBoards(); showRoomToast("Board received!");
-        }
+      if(bc && assembleRoomBoardEntry(bc)){
+        renderRoomBoards();
+        showRoomToast("Board received!");
       }
       if(roomIsHost) relay(fromId, msg);
       break;
@@ -7389,9 +8357,14 @@ function onMsg(msg, fromConn, fromId){
 
     case "board-sync":
       if(settings && settings.roomAutoSync && msg.json && !roomApplyingRemote){
-        try{ roomApplyingRemote=true; applyImportedData(JSON.parse(msg.json)); showRoomToast("Board synced from " + (fromConn._name||"host")); }
-        catch(_){}
-        finally{ setTimeout(function(){ roomApplyingRemote=false; },1000); }
+        roomApplyingRemote = true;
+        applyImportedData(JSON.parse(msg.json)).then(function(){
+          showRoomToast("Board synced from " + (fromConn._name||"host"));
+        }).catch(function(){
+          showRoomToast("Board sync failed");
+        }).finally(function(){
+          setTimeout(function(){ roomApplyingRemote=false; }, 1000);
+        });
       }
       break;
   }
@@ -7418,6 +8391,7 @@ async function shareFile(file){
 
   if(roomConnections.size===0){ showRoomToast("Saved locally — no peers yet."); return; }
 
+  var chunkDelay = getRoomChunkDelay(bytes.length);
   broadcast({ type:"file-announce", meta:meta });
 
   var prog = document.getElementById("roomProgress");
@@ -7426,10 +8400,9 @@ async function shareFile(file){
 
   for(var i=0; i<totalChunks; i++){
     var slice = bytes.slice(i*ROOM_CHUNK, (i+1)*ROOM_CHUNK);
-    broadcast({ type:"file-chunk", fileId:id, index:i, data:uint8ToB64(slice), total:totalChunks });
+    broadcast({ type:"file-chunk", fileId:id, index:i, data:uint8ToB64(slice), total:totalChunks, meta:meta });
     if(bar) bar.style.width = ((i+1)/totalChunks*100)+"%";
-    // 5ms pacing prevents WebRTC data channel buffer overflow
-    await new Promise(function(r){ setTimeout(r,5); });
+    await new Promise(function(r){ setTimeout(r, chunkDelay); });
   }
   // Explicit done signal — receiver assembles on this even if a count check missed
   broadcast({ type:"file-complete", fileId:id });
@@ -7479,10 +8452,27 @@ function playRoomFile(f){
   var u=URL.createObjectURL(f.data);
   var audio=document.getElementById("audio");
   if(!audio){ showRoomToast("No audio player found"); return; }
-  audio.src=u; desiredPlayback=true; audio.play().catch(function(){});
-  try{ document.getElementById("playerTrackTitle").textContent=f.name; document.getElementById("playerTrackSubtitle").textContent="From Room"; }catch(_){}
-  showRoomToast("Playing: "+f.name); closeRoomOverlay();
-  if(typeof startVisualizer==="function") startVisualizer();
+  if(currentTrackUrl){
+    URL.revokeObjectURL(currentTrackUrl);
+    currentTrackUrl = "";
+  }
+  currentTrackUrl = u;
+  audio.src = u;
+  desiredPlayback = true;
+  audio.play().then(function(){
+    ensureAudioAnalyzer();
+    if(typeof startVisualizer==="function") startVisualizer();
+  }).catch(function(){
+    desiredPlayback = false;
+    showRoomToast("Press Play to start audio");
+  });
+  try{
+    document.getElementById("playerTrackTitle").textContent = f.name;
+    document.getElementById("playerTrackSubtitle").textContent = "From Room";
+    updatePlayerUi();
+  }catch(_){}
+  showRoomToast("Playing: "+f.name);
+  closeRoomOverlay();
 }
 
 // ── shared pages ──────────────────────────────────────────────
@@ -7548,7 +8538,19 @@ function renderRoomBoards(){
     var item=document.createElement("div"); item.className="room-file-item";
     item.innerHTML='<div><div class="room-file-name">'+escapeHtml(b.name||"Board")+'</div><div class="room-file-meta">'+escapeHtml(b.senderName||"?")+'</div></div>';
     var acts=document.createElement("div"); acts.className="room-file-actions";
-    if(b.json){ var lb=document.createElement("button"); lb.textContent="Load"; lb.onclick=function(){try{applyImportedData(JSON.parse(b.json));showRoomToast("Board loaded!");}catch(_){showRoomToast("Failed to load board");}}; acts.appendChild(lb); }
+    if(b.json){
+      var lb=document.createElement("button");
+      lb.textContent="Load";
+      lb.onclick=function(){
+        loadRoomBoard(b).then(function(){
+          showRoomToast("Board loaded!");
+          closeRoomOverlay();
+        }).catch(function(error){
+          showRoomToast("Failed to load board: " + (error.message || "unknown error"));
+        });
+      };
+      acts.appendChild(lb);
+    }
     else{ var sp=document.createElement("span"); sp.textContent="Receiving…"; sp.style.cssText="color:var(--muted);font-size:12px"; acts.appendChild(sp); }
     item.appendChild(acts); list.appendChild(item);
   });
@@ -7557,7 +8559,7 @@ function renderRoomBoards(){
 async function shareCurrentBoardToRoom(){
   if(!roomPeer){ showRoomToast("Join or create a room first."); return; }
   try{
-    var payload = await buildFullExportPayload();
+    var payload = await buildFullExportPayload({ includeMedia: false });
     var json    = JSON.stringify(payload);
     var id      = crypto.randomUUID();
     var name    = "Board snapshot " + new Date().toLocaleTimeString();
@@ -7565,11 +8567,11 @@ async function shareCurrentBoardToRoom(){
     var meta    = {id:id,name:name,senderName:roomMyName,totalChunks:total};
     roomSharedBoards.push(Object.assign({},meta,{json:json,chunks:null}));
     renderRoomBoards();
+    var boardDelay = getRoomChunkDelay(json.length);
     broadcast({type:"board-announce",meta:meta});
     for(var i=0;i<total;i++){
-      broadcast({type:"board-chunk",boardId:id,index:i,data:json.slice(i*ROOM_CHUNK,(i+1)*ROOM_CHUNK),total:total});
-      // pace chunks to prevent buffer overflow
-      await new Promise(function(r){setTimeout(r,5);});
+      broadcast({type:"board-chunk",boardId:id,index:i,data:json.slice(i*ROOM_CHUNK,(i+1)*ROOM_CHUNK),total:total,meta:meta});
+      await new Promise(function(r){setTimeout(r, boardDelay);});
     }
     // Signal completion
     broadcast({type:"board-complete",boardId:id});
@@ -7596,18 +8598,32 @@ function sendRoomChat(){
   renderRoomChat();
 }
 
-function sendImageReaction(input){
-  var file = input.files && input.files[0]; if(!file) return;
-  input.value="";
-  var reader = new FileReader();
-  reader.onload = function(e){
-    var dataUrl = e.target.result;
-    var msg = {id:crypto.randomUUID(), type:"chat-message", senderName:roomMyName, senderColor:roomMyColor, message:"", imageReaction:dataUrl, sentAt:new Date().toISOString()};
+async function sendImageReaction(input){
+  var file = input.files && input.files[0];
+  if(!file) return;
+  input.value = "";
+  try{
+    var dataUrl = await compressImageForRoom(file);
+    var msg = {
+      id: crypto.randomUUID(),
+      type: "chat-message",
+      senderName: roomMyName,
+      senderColor: roomMyColor,
+      message: "",
+      imageReaction: dataUrl,
+      sentAt: new Date().toISOString()
+    };
     roomChatMessages.push(msg);
     broadcast(msg);
     renderRoomChat();
-  };
-  reader.readAsDataURL(file);
+    showRoomToast("Image sent");
+  } catch(error){
+    if((file.type || "").startsWith("image/")){
+      showRoomToast("Image too large — use the file dropzone to share it instead.");
+    } else {
+      showRoomToast("Could not send image: " + error.message);
+    }
+  }
 }
 
 try{document.getElementById("roomChatInput").addEventListener("keydown",function(e){ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendRoomChat();} });}catch(_){}
